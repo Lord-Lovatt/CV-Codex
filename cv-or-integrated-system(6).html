@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CV-OR Reference">
+    <meta name="theme-color" content="#1a5276">
+    <meta name="format-detection" content="telephone=yes">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231a5276' width='100' height='100' rx='20'/><text x='50' y='65' font-size='40' text-anchor='middle' fill='white'>CV</text></svg>">
+    <title>CV-OR Reference System</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --accent: #2980b9;
+            --warning: #c0392b;
+            --success: #27ae60;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --touch-min: 44px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        }
+        
+        html {
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 120px;
+            font-size: 16px;
+        }
+        
+        /* ===== HEADER ===== */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        header p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        /* ===== MAIN TAB NAVIGATION ===== */
+        .main-tabs {
+            display: flex;
+            background: var(--card);
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 52px;
+            z-index: 99;
+        }
+        
+        .main-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: var(--bg);
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: var(--touch-min);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .main-tab:active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .main-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .main-tab .tab-icon {
+            font-size: 1.1rem;
+        }
+        
+        /* ===== VIEW CONTAINERS ===== */
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* ===== PROTOCOLS NAV ===== */
+        .protocols-nav {
+            background: var(--card);
+            padding: 0.5rem;
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            gap: 0.5rem;
+            border-bottom: 1px solid #ddd;
+            scrollbar-width: none;
+        }
+        
+        .protocols-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .protocols-nav a {
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-height: var(--touch-min);
+            display: flex;
+            align-items: center;
+        }
+        
+        .protocols-nav a:active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0.75rem;
+        }
+        
+        /* ===== PROTOCOL SECTIONS ===== */
+        .section {
+            background: var(--card);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: var(--warning);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            min-height: 56px;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        
+        .section-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .section-header .progress-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        /* Progress state colors */
+        .section.progress-red .section-header { background: var(--warning); }
+        .section.progress-orange .section-header { background: #e67e22; }
+        .section.progress-green .section-header { background: var(--success); }
+        .section.progress-green .section-header .progress-badge { background: rgba(255,255,255,0.35); }
+        .section.progress-info .section-header { background: var(--primary); }
+        
+        .section-header:active { filter: brightness(1.1); }
+        
+        .section-header .toggle {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+            padding: 0.25rem;
+        }
+        
+        .section.collapsed .toggle { transform: rotate(-90deg); }
+        .section.collapsed .section-content { display: none; }
+        
+        .section-content {
+            padding: 1rem;
+        }
+        
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin: 0.75rem 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .alert-danger {
+            background: #fdedec;
+            border-left: 4px solid var(--warning);
+            color: #922b21;
+        }
+        
+        .alert-warning {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+            color: #9a7d0a;
+        }
+        
+        .alert-info {
+            background: #ebf5fb;
+            border-left: 4px solid var(--accent);
+            color: #1a5276;
+        }
+        
+        .alert .checklist {
+            margin-top: 0.75rem;
+        }
+        
+        .alert .checklist li {
+            background: rgba(255,255,255,0.5);
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.25rem;
+            border-bottom: none;
+        }
+        
+        /* ===== CHECKLISTS ===== */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-height: 52px;
+        }
+        
+        .checklist li:last-child { border-bottom: none; }
+        
+        .checklist input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+        
+        .checklist .item-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        
+        .checklist li.completed .item-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+        
+        .btn-complete {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 2px solid var(--success);
+            background: white;
+            color: var(--success);
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            min-width: 60px;
+            min-height: var(--touch-min);
+            touch-action: manipulation;
+        }
+        
+        .btn-complete:active {
+            background: var(--success);
+            color: white;
+            transform: scale(0.95);
+        }
+        
+        .checklist li.completed .btn-complete {
+            background: var(--success);
+            color: white;
+        }
+        
+        .checklist li.completed .btn-complete::before {
+            content: "✓ ";
+        }
+        
+        /* ===== DRUG LIST ===== */
+        .syringe-size {
+            font-weight: 700;
+            color: var(--accent);
+            white-space: nowrap;
+            font-size: 1rem;
+            display: inline-block;
+            min-width: 50px;
+            margin-right: 0.5rem;
+        }
+        
+        .drug-conc {
+            color: #666;
+            font-size: 0.85rem;
+            margin-left: 0.25rem;
+        }
+        
+        .drug-list li {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 0.75rem !important;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .drug-list li.completed {
+            background: #e8f6e8;
+            border-color: var(--success);
+        }
+        
+        .drug-list li.completed .syringe-size {
+            color: var(--success);
+        }
+        
+        /* ===== PHASE INDICATORS ===== */
+        .phase-indicator {
+            display: inline-block;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .phase-pre { background: #d5f5e3; color: #1e8449; }
+        .phase-bypass { background: #fdebd0; color: #b9770e; }
+        .phase-post { background: #fadbd8; color: #922b21; }
+        
+        h3 {
+            color: var(--primary);
+            margin: 1.25rem 0 0.75rem 0;
+            font-size: 1rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.25rem;
+        }
+        
+        /* ===== STEP LIST ===== */
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .step-list li {
+            counter-increment: step;
+            padding: 0.75rem 0 0.75rem 2.75rem;
+            position: relative;
+            border-bottom: 1px solid #eee;
+            min-height: 52px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .step-list li.completed::before {
+            background: var(--success);
+            content: "✓";
+        }
+        
+        .step-list input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+        
+        .step-list .item-text { flex: 1; }
+        
+        .step-list li.completed .item-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+        
+        .step-list .btn-complete {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 2px solid var(--success);
+            background: white;
+            color: var(--success);
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            min-width: 60px;
+            min-height: var(--touch-min);
+            touch-action: manipulation;
+        }
+        
+        .step-list .btn-complete:active {
+            background: var(--success);
+            color: white;
+            transform: scale(0.95);
+        }
+        
+        .step-list li.completed .btn-complete {
+            background: var(--success);
+            color: white;
+        }
+        
+        .step-list li.completed .btn-complete::before {
+            content: "✓ ";
+        }
+        
+        /* ===== KEY-VALUE & CONTACTS ===== */
+        .key-value {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .key-value dt {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .key-value dd {
+            font-weight: 500;
+        }
+        
+        .contact-box {
+            background: #ebf5fb;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+        
+        .contact-box strong {
+            color: var(--primary);
+        }
+        
+        /* ===== SURGEON PREFERENCES ===== */
+        .surgeon-search {
+            padding: 0.75rem;
+            background: var(--card);
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 96px;
+            z-index: 50;
+        }
+        
+        .surgeon-search input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .surgeon-search input:focus {
+            border-color: var(--accent);
+        }
+        
+        .surgeon-card {
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e4e8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+        
+        .surgeon-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .surgeon-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: #2c3e50;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            transition: background 0.2s ease;
+            min-height: var(--touch-min);
+        }
+        
+        .surgeon-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .surgeon-btn .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            color: var(--accent);
+        }
+        
+        .surgeon-card.active .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .surgeon-card.active .surgeon-btn {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e4e8;
+        }
+        
+        .preferences {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #fafbfc;
+        }
+        
+        .surgeon-card.active .preferences {
+            max-height: 1500px;
+        }
+        
+        .pref-content {
+            padding: 12px 16px 16px;
+        }
+        
+        .pref-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px 24px;
+        }
+        
+        .pref-item {
+            padding: 6px 0;
+            border-bottom: 1px solid #eef1f4;
+        }
+        
+        .pref-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .pref-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--accent);
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+        
+        .pref-value {
+            color: #444;
+            line-height: 1.4;
+            font-size: 0.85rem;
+        }
+        
+        .pref-value.empty {
+            color: #bbb;
+            font-style: italic;
+        }
+        
+        .surgeon-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        
+        .surgeon-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .surgeon-hidden {
+            display: none !important;
+        }
+        
+        /* ===== DRUG CARDS ===== */
+        .drug-card {
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e4e8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+        
+        .drug-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .drug-card-header {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            min-height: var(--touch-min);
+        }
+        
+        .drug-card-header:active {
+            filter: brightness(1.1);
+        }
+        
+        .drug-card-header .drug-name {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .drug-card-header .drug-generic {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .drug-card-header .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .drug-card.active .drug-card-header .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .drug-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #fafbfc;
+        }
+        
+        .drug-card.active .drug-details {
+            max-height: 2000px;
+        }
+        
+        .drug-details-content {
+            padding: 16px;
+        }
+        
+        .drug-info-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #eef1f4;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .drug-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .drug-info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--accent);
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        
+        .drug-info-value {
+            color: #333;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .drug-info-value strong {
+            color: var(--primary);
+        }
+        
+        .drug-info-value .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .drug-info-value .mandatory {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .drug-bullet {
+            padding-left: 1rem;
+            margin: 4px 0;
+            position: relative;
+        }
+        
+        .drug-bullet::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .drug-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 0.85rem;
+        }
+        
+        .drug-table th, .drug-table td {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .drug-table th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .drug-search {
+            padding: 0.75rem;
+            background: var(--card);
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 96px;
+            z-index: 50;
+        }
+        
+        .drug-search input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .drug-search input:focus {
+            border-color: var(--accent);
+        }
+        
+        .drug-hidden {
+            display: none !important;
+        }
+        
+        /* ===== FOOTER ===== */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        
+        footer span {
+            display: none;
+        }
+        
+        footer > div {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: stretch;
+        }
+        
+        footer button {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 0.75rem 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            min-height: var(--touch-min);
+            flex: 1;
+            touch-action: manipulation;
+        }
+        
+        footer button:active {
+            background: #e0e0e0;
+            transform: scale(0.95);
+        }
+        
+        /* ===== MOBILE STYLES ===== */
+        @media (max-width: 600px) {
+            .pref-grid {
+                grid-template-columns: 1fr;
+            }
+            .pref-item.full-width {
+                grid-column: 1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .drug-list .syringe-size {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+            
+            .drug-list .drug-conc {
+                display: block;
+                margin-left: 0;
+                margin-top: 0.25rem;
+            }
+            
+            .checklist li, .step-list li {
+                flex-wrap: wrap;
+            }
+            
+            .checklist .item-text, .step-list .item-text {
+                order: 1;
+                flex-basis: calc(100% - 36px);
+            }
+            
+            .checklist input[type="checkbox"], .step-list input[type="checkbox"] {
+                order: 0;
+            }
+            
+            .btn-complete, .step-list .btn-complete {
+                order: 2;
+                margin-top: 0.5rem;
+                width: 100%;
+                padding: 0.75rem;
+            }
+            
+            .step-list li {
+                padding-left: 2.75rem;
+            }
+            
+            .key-value {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-tab {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+            
+            .main-tab .tab-icon {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ===== TABLET & DESKTOP ===== */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .protocols-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            footer span {
+                display: block;
+            }
+            
+            footer > div {
+                width: auto;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            body {
+                padding-bottom: 80px;
+            }
+            
+            header {
+                padding: 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .protocols-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .protocols-nav a:hover {
+                background: var(--accent);
+                color: white;
+            }
+            
+            .section-header:hover {
+                filter: brightness(1.1);
+            }
+            
+            .btn-complete:hover, .step-list .btn-complete:hover {
+                background: var(--success);
+                color: white;
+            }
+            
+            footer span {
+                display: block;
+            }
+            
+            footer > div {
+                width: auto;
+            }
+            
+            footer button {
+                padding: 0.5rem 1rem;
+                flex: none;
+            }
+            
+            .main-tab:hover {
+                background: var(--accent);
+                color: white;
+            }
+        }
+        
+        /* ===== PRINT ===== */
+        @media print {
+            .main-tabs, .protocols-nav, footer { display: none; }
+            .section.collapsed .section-content { display: block; }
+            .section { break-inside: avoid; }
+            .btn-complete, .step-list .btn-complete { display: none; }
+            .checklist input[type="checkbox"], .step-list input[type="checkbox"] { display: none; }
+            body { padding-bottom: 0; }
+            .view { display: block !important; }
+        }
+        
+        /* ===== SAFE AREA ===== */
+        @supports (padding: max(0px)) {
+            footer {
+                padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+                padding-left: max(0.5rem, env(safe-area-inset-left));
+                padding-right: max(0.5rem, env(safe-area-inset-right));
+            }
+            
+            body {
+                padding-bottom: calc(120px + env(safe-area-inset-bottom));
+            }
+            
+            header {
+                padding-top: max(0.75rem, env(safe-area-inset-top));
+            }
+            
+            .main-tabs {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+        }
+        
+        /* ===== iOS DEVICE SPECIFIC STYLES ===== */
+        
+        /* iPhone SE, iPhone 8 (375px) */
+        @media only screen 
+        and (device-width: 375px) 
+        and (-webkit-device-pixel-ratio: 2) {
+            .main-tab {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.25rem;
+            }
+            .main-tab .tab-icon {
+                font-size: 0.9rem;
+            }
+            .section-header, .surgeon-btn, .drug-card-header {
+                padding: 10px 12px;
+            }
+            .pref-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* iPhone 12/13/14 (390px) */
+        @media only screen 
+        and (device-width: 390px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            body {
+                font-size: 15px;
+            }
+        }
+        
+        /* iPhone 12/13/14 Pro Max, iPhone 14 Plus (428px) */
+        @media only screen 
+        and (device-width: 428px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            body {
+                font-size: 16px;
+            }
+            .pref-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* iPhone 15 Pro Max (430px) */
+        @media only screen 
+        and (device-width: 430px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            body {
+                font-size: 16px;
+            }
+        }
+        
+        /* iPad Mini, iPad (768px) */
+        @media only screen 
+        and (min-device-width: 768px) 
+        and (max-device-width: 1024px) 
+        and (-webkit-min-device-pixel-ratio: 1) {
+            body {
+                font-size: 17px;
+            }
+            
+            .main-tabs {
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .main-tab {
+                flex: 0 1 200px;
+                font-size: 1rem;
+                padding: 0.75rem 1.5rem;
+            }
+            
+            main {
+                max-width: 720px;
+                padding: 1rem;
+            }
+            
+            .section-header {
+                padding: 1.25rem;
+                font-size: 1.1rem;
+            }
+            
+            .checklist li {
+                padding: 1rem 0;
+                min-height: 60px;
+            }
+            
+            .checklist .item-text {
+                font-size: 1rem;
+            }
+            
+            .btn-complete {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .pref-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px 32px;
+            }
+            
+            .pref-label {
+                font-size: 0.7rem;
+            }
+            
+            .pref-value {
+                font-size: 0.95rem;
+            }
+            
+            .surgeon-btn, .drug-card-header {
+                padding: 14px 18px;
+                font-size: 1.05rem;
+            }
+            
+            .drug-info-value {
+                font-size: 0.95rem;
+            }
+            
+            .drug-table {
+                font-size: 0.9rem;
+            }
+            
+            footer {
+                padding: 0.75rem 1rem;
+            }
+            
+            footer button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* iPad Pro 11" (834px) */
+        @media only screen 
+        and (min-device-width: 834px) 
+        and (max-device-width: 834px) 
+        and (-webkit-min-device-pixel-ratio: 2) {
+            main {
+                max-width: 780px;
+            }
+        }
+        
+        /* iPad Pro 12.9" (1024px) */
+        @media only screen 
+        and (min-device-width: 1024px) 
+        and (max-device-width: 1366px) 
+        and (-webkit-min-device-pixel-ratio: 2) {
+            body {
+                font-size: 18px;
+            }
+            
+            main {
+                max-width: 900px;
+                padding: 1.5rem;
+            }
+            
+            .main-tab {
+                flex: 0 1 220px;
+                font-size: 1.1rem;
+            }
+            
+            .section-header {
+                padding: 1.5rem;
+                font-size: 1.15rem;
+            }
+            
+            .pref-grid {
+                gap: 14px 40px;
+            }
+            
+            .surgeon-card, .drug-card {
+                margin-bottom: 12px;
+            }
+        }
+        
+        /* iOS-specific touch and interaction improvements */
+        @supports (-webkit-touch-callout: none) {
+            /* Disable callout on long press */
+            .surgeon-btn, .drug-card-header, .section-header, .btn-complete, .main-tab, footer button {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            
+            /* Smooth momentum scrolling */
+            .protocols-nav, .surgeon-search, .drug-search, main {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Better tap highlighting */
+            .surgeon-btn:active, .drug-card-header:active, .btn-complete:active, .main-tab:active {
+                opacity: 0.7;
+                transition: opacity 0.1s;
+            }
+            
+            /* Prevent zoom on input focus */
+            input[type="text"] {
+                font-size: 16px !important;
+            }
+            
+            /* Larger touch targets for iOS */
+            .checklist input[type="checkbox"] {
+                width: 28px;
+                height: 28px;
+            }
+            
+            /* Fix for iOS rubber band scrolling at edges */
+            body {
+                overscroll-behavior-y: none;
+            }
+        }
+        
+        /* Landscape mode for iPhones */
+        @media only screen 
+        and (max-device-width: 932px) 
+        and (orientation: landscape) 
+        and (-webkit-min-device-pixel-ratio: 2) {
+            header {
+                padding: 0.5rem 1rem;
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+            
+            header h1 {
+                font-size: 1rem;
+            }
+            
+            header p {
+                display: none;
+            }
+            
+            .main-tabs {
+                padding-left: max(0.5rem, env(safe-area-inset-left));
+                padding-right: max(0.5rem, env(safe-area-inset-right));
+            }
+            
+            .main-tab {
+                padding: 0.4rem 0.75rem;
+            }
+            
+            main {
+                padding-left: max(0.75rem, env(safe-area-inset-left));
+                padding-right: max(0.75rem, env(safe-area-inset-right));
+            }
+            
+            body {
+                padding-bottom: calc(70px + env(safe-area-inset-bottom));
+            }
+            
+            footer {
+                padding-left: max(0.5rem, env(safe-area-inset-left));
+                padding-right: max(0.5rem, env(safe-area-inset-right));
+            }
+        }
+        
+        /* Landscape mode for iPads */
+        @media only screen 
+        and (min-device-width: 768px) 
+        and (max-device-width: 1366px) 
+        and (orientation: landscape) 
+        and (-webkit-min-device-pixel-ratio: 1) {
+            main {
+                max-width: 1000px;
+            }
+            
+            .pref-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .surgeon-card, .drug-card, .section {
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* ===== iOS CLASS-BASED STYLES ===== */
+        /* Applied via JavaScript detection */
+        
+        html.ios-device body {
+            /* Fix iOS 100vh issue */
+            min-height: calc(var(--vh, 1vh) * 100);
+        }
+        
+        html.ios-device .checklist input[type="checkbox"],
+        html.ios-device .step-list input[type="checkbox"] {
+            /* Better checkbox appearance on iOS */
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            background: white;
+            position: relative;
+        }
+        
+        html.ios-device .checklist input[type="checkbox"]:checked,
+        html.ios-device .step-list input[type="checkbox"]:checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        html.ios-device .checklist input[type="checkbox"]:checked::after,
+        html.ios-device .step-list input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        html.iphone-device .main-tab {
+            /* Ensure good tap targets on iPhone */
+            min-height: 48px;
+        }
+        
+        html.iphone-device .btn-complete,
+        html.iphone-device .step-list .btn-complete {
+            min-height: 48px;
+        }
+        
+        html.ipad-device .main-tabs {
+            padding: 0.5rem 1rem;
+        }
+        
+        html.ipad-device main {
+            padding: 1rem 1.5rem;
+        }
+        
+        html.ipad-device .section,
+        html.ipad-device .surgeon-card,
+        html.ipad-device .drug-card {
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CV-OR Reference System</h1>
+        <p>Protocols & Surgeon Preferences</p>
+    </header>
+    
+    <!-- MAIN TAB NAVIGATION -->
+    <div class="main-tabs">
+        <button class="main-tab active" onclick="switchView('protocols')">
+            <span class="tab-icon">📋</span>
+            <span>Protocols</span>
+        </button>
+        <button class="main-tab" onclick="switchView('surgeons')">
+            <span class="tab-icon">👨‍⚕️</span>
+            <span>Surgeon Prefs</span>
+        </button>
+        <button class="main-tab" onclick="switchView('drugs')">
+            <span class="tab-icon">💊</span>
+            <span>Drugs & Drips</span>
+        </button>
+    </div>
+    
+    <!-- ==================== PROTOCOLS VIEW ==================== -->
+    <div id="protocols-view" class="view active">
+        <nav class="protocols-nav">
+            <a href="#arrival">Arrival</a>
+            <a href="#setup">Drug Setup</a>
+            <a href="#patient">Patient</a>
+            <a href="#prebypass">Pre-Bypass</a>
+            <a href="#onbypass">On Bypass</a>
+            <a href="#offbypass">Off Bypass</a>
+            <a href="#transport">Transport</a>
+            <a href="#contacts">Contacts</a>
+        </nav>
+        
+        <main>
+            <!-- ARRIVAL SECTION -->
+            <div class="section collapsed" id="arrival">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>1. Arrival & Board Check</span>
+                        <span class="progress-badge">0/22</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Sign in at CV-OR 2nd Floor (lunch → CV lounge 5310#)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Check assignment (if unassigned → CV Charge MD: <strong>609-1091</strong>)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Find OR and set up (allow ≤30 min)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Test pacemaker battery and verify function</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Pre-Op Patient Meeting</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Greet patient, perform ID verification</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Verify allergy band</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Verify blood bank ID band</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Place O₂ NC on patient</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Perform H&P</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Check Surgical Consent</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Check Anesthesia Consent</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Check Blood Consent</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Confirm Attending MD spoke to patient</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Required Screening & Data</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Verify <strong>MiniCog</strong> completed (Score 0–2 = High Risk)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Verify <strong>Carotid Ultrasound</strong> per cardiac criteria</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Verify <strong>HgA1C</strong> on chart</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">High-risk DM → Confirm D10W + Insulin infusion started in Preop</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Preop Medications (Administer as Ordered)</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Tylenol</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Robaxin</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Lyrica and/or Methadone (if ordered)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">D10W + Insulin gtt (for qualifying DM patients)</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-danger">
+                        <strong>⚠️ ESCALATE:</strong> Contact leadership if required ERAS data or infusions are missing
+                    </div>
+                    
+                    <div class="alert alert-danger">
+                        <strong>⚠️ STOP:</strong> If any consent missing → Can place A-line but <strong>CANNOT SEDATE</strong>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <strong>ASK FOR HELP</strong> if unable to place IV or A-line
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DRUG SETUP SECTION -->
+            <div class="section collapsed" id="setup">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>2. Standard Drug Setup</span>
+                        <span class="progress-badge">0/27</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="alert alert-info">
+                        <strong>ℹ️ MANDATORY:</strong> Use specified syringe sizes for visual identification in emergencies
+                    </div>
+                    
+                    <h3>Standard Syringes</h3>
+                    <ul class="checklist drug-list">
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">60 ml</span> Heparin <span class="drug-conc">1000 U/ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">20 ml</span> Propofol <span class="drug-conc">(draw at induction)</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> Rocuronium <span class="drug-conc">100 mg/10 ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> Ephedrine <span class="drug-conc">5 mg/ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> Epinephrine <span class="drug-conc">4 mcg/ml (from 1mg/250ml bag)</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> Fentanyl <span class="drug-conc">250-500 mcg</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> TXA <span class="drug-conc">1000 mg/10 ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">10 ml</span> Neosynephrine (pre-mixed) <span class="drug-conc">100 mcg/ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">5 ml</span> Versed <span class="drug-conc">1 mg/ml</span></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">5 ml</span> Lidocaine <span class="drug-conc">100 mg/5 ml</span></span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Infusions</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">500 ml NS + TXA 1000 mg (pump tubing + train + 3" extension stopcock)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">NTG pre-mixed bottle (micro-drip + dial flow)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Precedex 400 mcg/100 ml NS (pre-mixed bag)</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <strong>If EF &lt;25%</strong> — Add to pumps:
+                        <ul class="checklist">
+                            <li><input type="checkbox"><span class="item-text">Pre-mixed Epi (4 mg/250 NS)</span><button class="btn-complete">Done</button></li>
+                            <li><input type="checkbox"><span class="item-text">Milrinone (20 mg/100 ml)</span><button class="btn-complete">Done</button></li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Airway Setup</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">ETT 8.0 + stylet</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">10 ml syringe (cuff)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">McGrath blade 3 or 4</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">White silk narrow tape + clear tape (or 2 tegaderms)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Lubricant</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Miscellaneous</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Clear eyeguard (+ towel for later)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Glide scope at bedside</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Block Setup (End of Case)</h3>
+                    <div class="alert alert-info">
+                        <strong>ℹ️ NURSING:</strong> Pull and prepare these items for regional blocks
+                    </div>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text"><strong>Exparel</strong> - pulled and ready</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><strong>Bupivacaine 0.25% + epi 1:200K</strong> (40 ml pre-ordered syringes)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Contact Anesthesia Tech → bring ultrasound</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Contact Anesthesia Tech → provide block needles</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- PATIENT ARRIVAL SECTION -->
+            <div class="section collapsed" id="patient">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>3. Patient Arrival in OR</span>
+                        <span class="progress-badge">0/13</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Initial Steps</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Patient positioned and initial monitors placed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">A-line placed and transduced (should have been placed in pre-op)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Pre-induction vital signs documented</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Timeout</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Team pause completed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Patient identity verified</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Procedure confirmed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Laterality confirmed (if applicable)</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Team Time-Out (Whiteboard)</h3>
+                    <div class="alert alert-warning">
+                        <strong>ALL CASES:</strong> Discuss and document on whiteboard
+                    </div>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Transfusion thresholds/parameters discussed & documented</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Antibiotic given + <strong>redose time</strong> written on board</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-danger">
+                        <strong>⚠️ ANNOUNCE</strong> antibiotic redose when time is reached<br>
+                        <strong>⚠️ VERBALLY COMMUNICATE</strong> all transfusions and factor concentrates
+                    </div>
+                    
+                    <h3>Pre-Induction Checklist</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Blood products verified availability & location</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Check surgeon-specific preferences (tap Surgeon Prefs tab)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Confirm antibiotic timing with surgeon</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">VANCO started in pre-op for all valve cases</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- PRE-BYPASS SECTION -->
+            <div class="section collapsed" id="prebypass">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>4. Pre-Bypass</span>
+                        <span class="progress-badge">0/14</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <span class="phase-indicator phase-pre">PRE-BYPASS</span>
+                    
+                    <h3>Induction</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Pre-oxygenation complete (3+ min)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Induction drugs given per protocol</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Intubation confirmed (ETCO2, bilateral breath sounds)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">ETT secured at appropriate depth</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Central Line</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">CVL placed per surgeon preference</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Swan-Ganz placed if indicated (attending has to be present in OR)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">All lumens aspirate and flush</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Pre-Heparin</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">TXA loading dose given (1g over 20 min)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Baseline Labs & ACT obtained</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">TEE probe placed (if indicated)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Prepare Heparin dose (300-400 U/kg)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Communicate with perfusionist</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Anesthesia Protocol</h3>
+                    <ul class="checklist drug-list">
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">Ketamine</span> 25–50 mg IV <strong>PRE-BYPASS</strong></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">TXA gtt</span> Running at <strong>2 mg/kg/hr</strong></span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-info">
+                        <strong>HEPARIN:</strong> Given on surgeon command. Confirm dose verbally. Target ACT &gt;450
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ON BYPASS SECTION -->
+            <div class="section collapsed" id="onbypass">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>5. On Bypass</span>
+                        <span class="progress-badge">0/8</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <span class="phase-indicator phase-bypass">ON BYPASS</span>
+                    
+                    <h3>Initiation</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Confirm ACT &gt;450 before cannulation</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Turn off vent/alarms and announce SEVO OFF for perfusion to dial theirs</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Observe for proper venous drainage</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Monitoring During Bypass</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Monitor MAP (per surgeon preference, typically 60-80)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">ACT/Labs will be checked by perfusion, ensure you have the data</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">TXA maintenance infusion running</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Document all events and interventions</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Preparation for Separation</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Prepare inotropes/vasopressors per surgeon preference</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <strong>TIP:</strong> Check Surgeon Prefs tab for specific drip preferences for your surgeon
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OFF BYPASS SECTION -->
+            <div class="section collapsed" id="offbypass">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>6. Off Bypass</span>
+                        <span class="progress-badge">0/23</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <span class="phase-indicator phase-post">POST-BYPASS</span>
+                    
+                    <h3>Pre-Separation</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">All required drips running (pressors preferred after aortic clamp off)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Call Attending MD for TEE evaluation</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Confirm all data sources flowing (FloTrac, CVP) and SEVO back ON</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Separation Protocol</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text"><strong>MANDATORY:</strong> Cleared by Surgeon AND Perfusionist</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Initiate Protamine (test dose recommended)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Maintain clear spoken 3-way communication</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">ANCEF given (every 4 hours, or after bypass), whichever comes first</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>Post-Bypass Labs</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Perform ALL labs and ACT seven (7) minutes after Protamine infused</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Post-wires labs strongly encouraged</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Goal:</strong> Do not bring acidotic patient to CVICU. If correcting multiple lab values concurrently → check more frequently.
+                    </div>
+                    
+                    <h3>Final Steps in OR</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">TEE removed (call Attending for permission)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Place OG tube</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Change CVL dressing (sterile technique) if needed</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Post-Bypass Anesthesia</h3>
+                    <ul class="checklist drug-list">
+                        <li><input type="checkbox"><span class="item-text"><span class="syringe-size">Ketamine</span> 25–50 mg IV <strong>POST-BYPASS</strong></span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Surgical (Exparel)</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Exparel administered at <strong>chest tube sites</strong></span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Exparel administered at <strong>drain sites</strong></span><button class="btn-complete">Done</button></li>
+                    </ul>
+                    
+                    <h3>ERAS Regional Blocks (End of Case)</h3>
+                    <div class="alert alert-info">
+                        <strong>BLOCKS:</strong> PEC 1 / PEC 2 and Serratus blocks<br>
+                        <strong>MEDICATION:</strong> Bupivacaine 0.25% + epi 1:200K (40 ml)
+                    </div>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Enter patient name into ultrasound machine</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Prime tubing for block</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Assist with medication injection</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">PEC 1 block completed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">PEC 2 block completed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Serratus block completed</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Block images captured and documented</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- TRANSPORT SECTION -->
+            <div class="section collapsed" id="transport">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>7. Transport to CV-ICU</span>
+                        <span class="progress-badge">0/8</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <h3>Mandatory Transport Items</h3>
+                    <div class="alert alert-danger">
+                        <ul class="checklist">
+                            <li><input type="checkbox"><span class="item-text"><strong>Pacemaker</strong></span><button class="btn-complete">Done</button></li>
+                            <li><input type="checkbox"><span class="item-text"><strong>Red transport ventilator</strong> (if transporting to 9900)</span><button class="btn-complete">Done</button></li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Transport Checklist</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox"><span class="item-text">Transport pumps with OR IV pole (adjust height)</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Tidy lines for movement</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Sufficient warm fluids on IV pole</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Emergency drugs available</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Complete CV-ICU Handoff checklist</span><button class="btn-complete">Done</button></li>
+                        <li><input type="checkbox"><span class="item-text">Retain yellow copy after report to CV-ICU RN</span><button class="btn-complete">Done</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- CONTACTS SECTION -->
+            <div class="section collapsed progress-info" id="contacts">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="header-left">
+                        <span>8. Key Contacts</span>
+                        <span class="progress-badge">Reference</span>
+                    </div>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="contact-box">
+                        <dl class="key-value">
+                            <dt>CV Charge MD</dt>
+                            <dd><strong>609-1091</strong></dd>
+                            <dt>Lead CV CRNA</dt>
+                            <dd>hana.kleinova@usap.com</dd>
+                            <dt>SOPs Location</dt>
+                            <dd>USAP Sharepoint & MD Claim</dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="alert alert-info" style="margin-top: 1rem;">
+                        <strong>SOP Suggestions:</strong> Submit improvements to Lead CV CRNA
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- ==================== SURGEONS VIEW ==================== -->
+    <div id="surgeons-view" class="view">
+        <div class="surgeon-search">
+            <input type="text" id="surgeon-search-input" placeholder="🔍 Search surgeons..." oninput="filterSurgeons(this.value)">
+        </div>
+        
+        <main id="surgeons-container">
+            <!-- Ali -->
+            <div class="surgeon-card" data-surgeon="ali">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">A</div>
+                        <span>Ali</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">Swan</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Almost Always</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value">NO excessive talking</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">Pay attention!</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacemaker always travels with Pt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bishop -->
+            <div class="surgeon-card" data-surgeon="bishop">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">B</div>
+                        <span>Bishop</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">Swan</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Almost Always</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value">NO excessive talking</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">Pay attention!</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacemaker always travels with Pt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bogar -->
+            <div class="surgeon-card" data-surgeon="bogar">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">B</div>
+                        <span>Bogar</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Almost always</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi/Levo/Vaso</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value">Keep bed levelled</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">TEE for retrograde canula insertion</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Boyer -->
+            <div class="surgeon-card" data-surgeon="boyer">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">B</div>
+                        <span>Boyer</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">&lt;30%</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi, Milr/Levo</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value">Legs elevated on a mat for CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value">Ask if steroids needed for REDO</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacer to travel to CV-ICU, For CEA - cerebral ox monitoring for bilateral disease</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Davis -->
+            <div class="surgeon-card" data-surgeon="davis">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">D</div>
+                        <span>Davis</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guel -->
+            <div class="surgeon-card" data-surgeon="guel">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">G</div>
+                        <span>Guel</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">EF &lt;30, Pulm. HTN, R side failure</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">75</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr - Levo, Cardene for HTN</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Mediastinoscopy: Preference A-Line on right, Puls-ox on left. If not Pulse-ox on right</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Karas -->
+            <div class="surgeon-card" data-surgeon="karas">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">K</div>
+                        <span>Karas</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">EF &lt;30, Pulm. HTN, R side failure</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">75</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr - Levo, Cardene or Cleviprex for HTN</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value">Lungs - beanbag backwards</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">Yes for heavy pt or long CPB</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Mediastinoscopy: Preference A-Line on right, Puls-ox on left. If not Pulse-ox on right</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Khouzam -->
+            <div class="surgeon-card" data-surgeon="khouzam">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">K</div>
+                        <span>Khouzam</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Very sick Pt only</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">Keep SBP around 50 after separation for the period when surgeon takes aortic cannula and oversows it</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi/Levo/Vaso</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacemaker always travels with Pt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lee -->
+            <div class="surgeon-card" data-surgeon="lee">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">L</div>
+                        <span>Lee</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi (Brady, PHT) - Milr/Levo - Milr/Epi/Vaso for REDO</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">Yes - 100mg/250 NS, run 50ml/hr</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value">Military Style, crisp & clear, Communicate ALL concerns during Surgical Pause</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">Always clarify drug before pushing, DO NOT place blue goggles on patient</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">0715 start on 1st case, If Pt has previous pacer, turn OFF during surgery and run at 85 post surgery, check K before coming off CPB - All Pt travel to CV-ICU with attached pacer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loumiotis -->
+            <div class="surgeon-card" data-surgeon="loumiotis">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">L</div>
+                        <span>Loumiotis</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi (Brady, PHT) - Milr/Levo - Milr/Epi/Vaso for REDO</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">Yes - 100mg/250 NS, run 50ml/hr</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value">Military Style, crisp & clear, Communicate ALL concerns during Surgical Pause</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">Always clarify drug before pushing, DO NOT place blue goggles on patient</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">0715 start on 1st case, If Pt has previous pacer, turn OFF during surgery and run at 85 post surgery, check K before coming off CPB - All Pt travel to CV-ICU with attached pacer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Suarez -->
+            <div class="surgeon-card" data-surgeon="suarez">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">S</div>
+                        <span>Suarez</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">9F2L & Slick</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Sick Pt</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi/Levo/Vaso</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">Yes for heavy pt or long CPB</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value">Ask if steroids for REDO</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item full-width">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">In stressful situations expect limited comms from surgeon. Monitor surgical field carefully to decide next step</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacemaker always travels with Pt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zeeshan -->
+            <div class="surgeon-card" data-surgeon="zeeshan">
+                <button class="surgeon-btn" onclick="toggleSurgeonCard(this)">
+                    <div class="surgeon-info">
+                        <div class="surgeon-icon">Z</div>
+                        <span>Zeeshan</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="preferences">
+                    <div class="pref-content">
+                        <div class="pref-grid">
+                            <div class="pref-item">
+                                <div class="pref-label">CVL</div>
+                                <div class="pref-value">Swan</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Swanz-Ganz</div>
+                                <div class="pref-value">Almost Always</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">MAP</div>
+                                <div class="pref-value">70</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">B-Blocker</div>
+                                <div class="pref-value">For CABG</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Drip Preference</div>
+                                <div class="pref-value">Milr/Epi/Vaso/Levo</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Positioning</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Labs</div>
+                                <div class="pref-value">At least 2 sets post bypass</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Blood Products</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Post Bypass Protamine Drip</div>
+                                <div class="pref-value">No</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Vanco in Pre-Op</div>
+                                <div class="pref-value">Yes</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Pre Surgery Drugs</div>
+                                <div class="pref-value empty">—</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Communications</div>
+                                <div class="pref-value">NO excessive talking</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Dislikes & OR Rules</div>
+                                <div class="pref-value">Pay attention!</div>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-label">Misc Notes</div>
+                                <div class="pref-value">Pacemaker always travels with Pt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- ==================== DRUGS & DRIPS VIEW ==================== -->
+    <div id="drugs-view" class="view">
+        <div class="drug-search">
+            <input type="text" id="drug-search-input" placeholder="🔍 Search drugs..." oninput="filterDrugs(this.value)">
+        </div>
+        
+        <main id="drugs-container">
+            <!-- AMICAR -->
+            <div class="drug-card" data-drug="amicar aminocaproic acid anti-fibrinolytic">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>AMICAR</span>
+                        <span class="drug-generic">Aminocaproic acid</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Class</div>
+                            <div class="drug-info-value">Anti-fibrinolytic</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Loading Dose</div>
+                            <div class="drug-info-value"><strong>5g bolus</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Infusion</div>
+                            <div class="drug-info-value">5g/500ml NS<br>Dial flow rate: <strong>100ml/hr</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AMIODARONE -->
+            <div class="drug-card" data-drug="amiodarone cordarone antiarrhythmic">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>AMIODARONE</span>
+                        <span class="drug-generic">Cordarone</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Bolus</div>
+                            <div class="drug-info-value"><strong>150 mg</strong> over first 10 minutes (15 mg/min) — <span class="highlight">USE FILTER</span></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Followed By</div>
+                            <div class="drug-info-value"><strong>360 mg</strong> over next 6 hours (1 mg/min)</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Maintenance Infusion</div>
+                            <div class="drug-info-value"><strong>540 mg</strong> over remaining 18 hours (0.5 mg/min)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ANGIOMAX -->
+            <div class="drug-card" data-drug="angiomax bivalirudin anticoagulant">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>ANGIOMAX</span>
+                        <span class="drug-generic">Bivalirudin</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value">250mg/250ml NS</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">ON PUMP</div>
+                            <div class="drug-info-value">
+                                <div class="drug-bullet">Load: <strong>1 mg/kg</strong></div>
+                                <div class="drug-bullet">Infusion: <strong>2.5 mg/kg/hr</strong></div>
+                                <div class="drug-bullet">Target: <span class="highlight">ACT &gt;400</span></div>
+                            </div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">OFF PUMP</div>
+                            <div class="drug-info-value">
+                                <div class="drug-bullet">Load: <strong>0.75 mg/kg</strong></div>
+                                <div class="drug-bullet">Infusion: <strong>1.75 mg/kg/hr</strong></div>
+                                <div class="drug-bullet">Target: <span class="highlight">ACT &gt;300</span></div>
+                            </div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Re-bolus</div>
+                            <div class="drug-info-value">May re-bolus <strong>0.1–0.3 mg/kg</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ANTITHROMBIN III -->
+            <div class="drug-card" data-drug="antithrombin iii thrombate anticoagulant">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>ANTITHROMBIN III</span>
+                        <span class="drug-generic">Thrombate III</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Indication</div>
+                            <div class="drug-info-value">Hereditary antithrombin deficient patients<br><em>(send preop AT3 levels)</em></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Testing</div>
+                            <div class="drug-info-value">Test for efficacy levels — aPTT and anti-Factor Xa activity</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Dose</div>
+                            <div class="drug-info-value"><strong>1 vial 500–700 IU</strong><br><span class="highlight">Order two (2) vials</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BALFAXAR -->
+            <div class="drug-card" data-drug="balfaxar 4f-pcc vitamin k reversal anticoagulant">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>BALFAXAR</span>
+                        <span class="drug-generic">4F-PCC</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Indication</div>
+                            <div class="drug-info-value">Urgent reversal of VKA anticoagulation in adults</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Mechanism</div>
+                            <div class="drug-info-value">4F-PCC replenishing Vit K dependent factors II, VII, IX, X, Protein S & C</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Safety Risk</div>
+                            <div class="drug-info-value"><span class="mandatory">Thromboembolism, Allergic reaction</span></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Contraindication</div>
+                            <div class="drug-info-value"><span class="mandatory">HIT</span></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Dosing</div>
+                            <div class="drug-info-value">Single dose, weight & INR based
+                                <table class="drug-table">
+                                    <tr><th>INR</th><th>Dose</th><th>Maximum</th></tr>
+                                    <tr><td>2 to &lt;4</td><td>25 u/kg</td><td>2500 u</td></tr>
+                                    <tr><td>4–6</td><td>35 u/kg</td><td>3500 u</td></tr>
+                                    <tr><td>&gt;6</td><td>50 u/kg</td><td>5000 u</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Preparation</div>
+                            <div class="drug-info-value">Reconstitute in sterile water (blue tinge)<br>Infuse over <strong>10 minutes</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BIVALIRUDIN -->
+            <div class="drug-card" data-drug="bivalirudin ecmo impella anticoagulant">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>BIVALIRUDIN</span>
+                        <span class="drug-generic">ECMO to Impella Adjustment Guide</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">ECMO to Impella Bivalirudin Adjustment Guide</div>
+                            <div class="drug-info-value">
+                                <table class="drug-table">
+                                    <tr>
+                                        <th>Current Bivalirudin Infusion Rate</th>
+                                        <th>ACT Value</th>
+                                        <th>Bolus Recommendation For Impella Insertion</th>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="3"><strong>0.10–0.15 mg/kg/hr</strong></td>
+                                        <td>&lt;250 sec</td>
+                                        <td>0.5 mg/kg bolus</td>
+                                    </tr>
+                                    <tr>
+                                        <td>250–300 sec</td>
+                                        <td>0.25–0.5 mg/kg bolus</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&gt;300 sec</td>
+                                        <td>No bolus needed</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>0.15–0.20 mg/kg/hr</strong></td>
+                                        <td>300 sec</td>
+                                        <td><span class="highlight">Hold infusion, recheck in 5 min</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>0.20–0.25 mg/kg/hr</strong></td>
+                                        <td>300 sec</td>
+                                        <td><span class="highlight">Hold infusion, recheck in 5 min</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Monitoring Notes</div>
+                            <div class="drug-info-value">
+                                <div class="drug-bullet">Continue current infusion rate during insertion</div>
+                                <div class="drug-bullet">Adjust based on ACT goal <strong>≥ 250–300 sec</strong></div>
+                                <div class="drug-bullet">After device inserted, resume ECMO anticoagulation per protocol</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CLEVIPREX -->
+            <div class="drug-card" data-drug="cleviprex clevidipine calcium channel blocker antihypertensive">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>CLEVIPREX</span>
+                        <span class="drug-generic">Clevidipine</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>0.5 mg/ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Initiation</div>
+                            <div class="drug-info-value">Start at <strong>1–2 mg/hr</strong>, double dose every 90 sec</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Administration</div>
+                            <div class="drug-info-value"><span class="highlight">Separate IV port is advised</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DDAVP -->
+            <div class="drug-card" data-drug="ddavp desmopressin coagulation">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>DDAVP</span>
+                        <span class="drug-generic">Desmopressin</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>4 mcg/ml</strong> (small glass 1ml vial)</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Recommended Dose</div>
+                            <div class="drug-info-value"><strong>0.3 mcg/kg</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DEXMEDETOMIDINE -->
+            <div class="drug-card" data-drug="dexmedetomidine precedex alpha2 agonist sedative">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>DEXMEDETOMIDINE</span>
+                        <span class="drug-generic">Precedex — Alpha2 agonist</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Bottle Concentration</div>
+                            <div class="drug-info-value"><strong>4 mcg/ml</strong> (400 mcg/100 ml)</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Pump Rate</div>
+                            <div class="drug-info-value"><strong>0.2–0.7 mcg/kg/hr</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">ICU Release</div>
+                            <div class="drug-info-value">Preferred rate: <span class="highlight">0.4 mcg/kg/hr</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DILTIAZEM -->
+            <div class="drug-card" data-drug="diltiazem cardizem calcium channel blocker">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>DILTIAZEM</span>
+                        <span class="drug-generic">Cardizem</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>125 mg/125 ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Pre-mix Infusion</div>
+                            <div class="drug-info-value"><strong>5–10 mg/hr</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DOBUTAMINE -->
+            <div class="drug-card" data-drug="dobutamine inotrope beta agonist">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>DOBUTAMINE</span>
+                        <span class="drug-generic">Beta1 and some Alpha1</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Inotropic</div>
+                            <div class="drug-info-value"><strong>2.5–10 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Vasoconstrictor</div>
+                            <div class="drug-info-value"><strong>10–20 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Preferred Starting Dose</div>
+                            <div class="drug-info-value"><span class="highlight">5 mcg/kg/min</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DOPAMINE -->
+            <div class="drug-card" data-drug="dopamine inotrope vasopressor">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>DOPAMINE</span>
+                        <span class="drug-generic">D1 &lt; Beta1 &lt; Alpha1</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>500 mg/250 ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Renal</div>
+                            <div class="drug-info-value"><strong>&lt;5 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Inotropic</div>
+                            <div class="drug-info-value"><strong>5–10 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Vasoconstrictor</div>
+                            <div class="drug-info-value"><strong>10–20 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Preferred Starting Dose</div>
+                            <div class="drug-info-value"><span class="highlight">3 mcg/kg/min</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- EPINEPHRINE -->
+            <div class="drug-card" data-drug="epinephrine adrenalin alpha beta vasopressor inotrope">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>EPINEPHRINE</span>
+                        <span class="drug-generic">Adrenalin — Alpha1, Beta</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>4 mg/250 ml NS</strong> = 16 mcg/ml<br><span class="highlight">Renal pts: 8 mg/250 ml or 16 mg/250 ml</span></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Beta</div>
+                            <div class="drug-info-value"><strong>0.01–0.03 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Beta &gt; Alpha</div>
+                            <div class="drug-info-value"><strong>0.03–0.15 mcg/kg/min</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Alpha + Beta</div>
+                            <div class="drug-info-value"><strong>0.15–0.5 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ESMOLOL -->
+            <div class="drug-card" data-drug="esmolol brevibloc beta blocker">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>ESMOLOL</span>
+                        <span class="drug-generic">Brevibloc</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>10 mg/ml</strong> (250 mg in 250 ml)</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Bolus</div>
+                            <div class="drug-info-value"><strong>80 mg</strong> or <strong>1 mg/kg</strong> over 30 sec</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Rate</div>
+                            <div class="drug-info-value"><strong>0.05–0.2 mg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LIDOCAINE -->
+            <div class="drug-card" data-drug="lidocaine antiarrhythmic local anesthetic">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>LIDOCAINE</span>
+                        <span class="drug-generic">Antiarrhythmic</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>2 mg/250 ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Rate</div>
+                            <div class="drug-info-value"><strong>1–4 mg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MILRINONE -->
+            <div class="drug-card" data-drug="milrinone primacor inotrope pde inhibitor">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>MILRINONE</span>
+                        <span class="drug-generic">Primacor</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Optional Bolus</div>
+                            <div class="drug-info-value"><strong>50 mcg/kg</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Infusion</div>
+                            <div class="drug-info-value"><strong>0.23–0.75 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NICARDIPINE -->
+            <div class="drug-card" data-drug="nicardipine cardene calcium channel blocker antihypertensive">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>NICARDIPINE</span>
+                        <span class="drug-generic">Cardene</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Class</div>
+                            <div class="drug-info-value">Selective arterial dilator with preservation of cerebral and coronary perfusion pressure</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>25 mg/250 ml</strong> or <strong>50 mg/250 ml</strong><br>= 0.1 mg/ml</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Rate</div>
+                            <div class="drug-info-value"><strong>2.5–15 mg/hr</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NITROPRUSSIDE -->
+            <div class="drug-card" data-drug="nitroprusside nipride vasodilator">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>NITROPRUSSIDE</span>
+                        <span class="drug-generic">Nipride</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Mechanism</div>
+                            <div class="drug-info-value">Direct NO donor for smooth muscle relaxation (arterial &gt; venous)</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Rate</div>
+                            <div class="drug-info-value"><strong>0.1–10 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NOREPINEPHRINE -->
+            <div class="drug-card" data-drug="norepinephrine levophed vasopressor alpha">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>NOREPINEPHRINE</span>
+                        <span class="drug-generic">Levophed — Alpha1 &gt;&gt; Beta1</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>4 mg/250 ml NS</strong> = 16 mcg/ml</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Vasoconstrictor</div>
+                            <div class="drug-info-value"><strong>0.01–0.5 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NTG -->
+            <div class="drug-card" data-drug="ntg nitroglycerin vasodilator coronary">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>NTG</span>
+                        <span class="drug-generic">Nitroglycerin</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Mechanism</div>
+                            <div class="drug-info-value">Vaso/veno/dilator, especially coronary vasodilator</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value">Bottle: <strong>200 mcg/ml</strong><br>Syringe: <strong>20 mcg/ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Infusion</div>
+                            <div class="drug-info-value"><strong>0.1–7.0 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PHENYLEPHRINE -->
+            <div class="drug-card" data-drug="phenylephrine neosynephrine alpha agonist vasopressor">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>PHENYLEPHRINE</span>
+                        <span class="drug-generic">Neosynephrine — Alpha1 agonist</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>50 mg/250 ml</strong> = 200 mcg/ml</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Infusion</div>
+                            <div class="drug-info-value"><strong>0.5–6 mcg/kg/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TRANEXAMIC ACID -->
+            <div class="drug-card" data-drug="tranexamic acid txa antifibrinolytic">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>TRANEXAMIC ACID</span>
+                        <span class="drug-generic">TXA</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Supplied</div>
+                            <div class="drug-info-value"><strong>1000 mg/10 ml</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">1. Pre-bypass</div>
+                            <div class="drug-info-value"><strong>10 mg/kg</strong> over 10–15 minutes</div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">2. CPB Pump</div>
+                            <div class="drug-info-value"><strong>250 mg</strong> pump prime <span class="highlight">by Perfusionist</span></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">3. Continuous</div>
+                            <div class="drug-info-value"><strong>2 mg/kg/hr</strong> run via pump <span class="mandatory">MANDATORY</span><br>Continue to ICU, spike another if you run out</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VASOPRESSIN -->
+            <div class="drug-card" data-drug="vasopressin pitressin adh">
+                <button class="drug-card-header" onclick="toggleDrugCard(this)">
+                    <div class="drug-name">
+                        <span>VASOPRESSIN</span>
+                        <span class="drug-generic">Pitressin — ADH</span>
+                    </div>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="drug-details">
+                    <div class="drug-details-content">
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Concentration</div>
+                            <div class="drug-info-value"><strong>40 or 60 units/100 ml NS</strong></div>
+                        </div>
+                        <div class="drug-info-row">
+                            <div class="drug-info-label">Infusion</div>
+                            <div class="drug-info-value"><strong>0.01–0.07 units/min</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <span>CV-OR Reference System</span>
+        <div>
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+            <button onclick="resetChecks()">Reset ✓</button>
+        </div>
+    </footer>
+    
+    <script>
+        // ===== iOS DEVICE DETECTION =====
+        (function() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isIPad = /iPad/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isIPhone = /iPhone/.test(navigator.userAgent);
+            
+            if (isIOS) {
+                document.documentElement.classList.add('ios-device');
+                if (isIPad) {
+                    document.documentElement.classList.add('ipad-device');
+                }
+                if (isIPhone) {
+                    document.documentElement.classList.add('iphone-device');
+                }
+                
+                // Prevent double-tap zoom on iOS
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function(event) {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+                
+                // Fix for iOS viewport height issues (100vh bug)
+                function setVH() {
+                    let vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', `${vh}px`);
+                }
+                setVH();
+                window.addEventListener('resize', setVH);
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(setVH, 100);
+                });
+            }
+        })();
+        
+        // ===== VIEW SWITCHING =====
+        function switchView(viewName) {
+            // Update tabs
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(viewName + '-view').classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // ===== PROTOCOL SECTIONS =====
+        function toggleSection(header) {
+            header.parentElement.classList.toggle('collapsed');
+        }
+        
+        function expandAll() {
+            const activeView = document.querySelector('.view.active');
+            if (activeView.id === 'protocols-view') {
+                document.querySelectorAll('#protocols-view .section').forEach(s => s.classList.remove('collapsed'));
+            } else if (activeView.id === 'surgeons-view') {
+                document.querySelectorAll('.surgeon-card').forEach(c => c.classList.add('active'));
+            } else if (activeView.id === 'drugs-view') {
+                document.querySelectorAll('.drug-card').forEach(c => c.classList.add('active'));
+            }
+        }
+        
+        function collapseAll() {
+            const activeView = document.querySelector('.view.active');
+            if (activeView.id === 'protocols-view') {
+                document.querySelectorAll('#protocols-view .section').forEach(s => s.classList.add('collapsed'));
+            } else if (activeView.id === 'surgeons-view') {
+                document.querySelectorAll('.surgeon-card').forEach(c => c.classList.remove('active'));
+            } else if (activeView.id === 'drugs-view') {
+                document.querySelectorAll('.drug-card').forEach(c => c.classList.remove('active'));
+            }
+        }
+        
+        // ===== PROGRESS TRACKING =====
+        function updateSectionProgress(section) {
+            if (section.classList.contains('progress-info')) return;
+            
+            const checkboxes = section.querySelectorAll('.section-content input[type="checkbox"]');
+            const total = checkboxes.length;
+            if (total === 0) return;
+            
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const percentage = checked / total;
+            
+            const badge = section.querySelector('.progress-badge');
+            if (badge) {
+                badge.textContent = `${checked}/${total}`;
+            }
+            
+            section.classList.remove('progress-red', 'progress-orange', 'progress-green');
+            if (percentage === 1) {
+                section.classList.add('progress-green');
+            } else if (percentage >= 0.5) {
+                section.classList.add('progress-orange');
+            } else {
+                section.classList.add('progress-red');
+            }
+        }
+        
+        function updateAllProgress() {
+            document.querySelectorAll('#protocols-view .section').forEach(updateSectionProgress);
+        }
+        
+        function resetChecks() {
+            if (confirm('Reset all checkboxes?')) {
+                document.querySelectorAll('.checklist li, .step-list li').forEach((li, i) => {
+                    li.classList.remove('completed');
+                    const cb = li.querySelector('input[type="checkbox"]');
+                    if (cb) {
+                        cb.checked = false;
+                        localStorage.setItem('cvor_item' + i, 'false');
+                    }
+                });
+                updateAllProgress();
+            }
+        }
+        
+        // ===== SURGEON CARDS =====
+        function toggleSurgeonCard(btn) {
+            const card = btn.closest('.surgeon-card');
+            card.classList.toggle('active');
+        }
+        
+        function filterSurgeons(query) {
+            const cards = document.querySelectorAll('.surgeon-card');
+            const searchTerm = query.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                const surgeonName = card.getAttribute('data-surgeon');
+                const cardText = card.textContent.toLowerCase();
+                
+                if (searchTerm === '' || surgeonName.includes(searchTerm) || cardText.includes(searchTerm)) {
+                    card.classList.remove('surgeon-hidden');
+                } else {
+                    card.classList.add('surgeon-hidden');
+                }
+            });
+        }
+        
+        // ===== DRUG CARDS =====
+        function toggleDrugCard(btn) {
+            const card = btn.closest('.drug-card');
+            card.classList.toggle('active');
+        }
+        
+        function filterDrugs(query) {
+            const cards = document.querySelectorAll('.drug-card');
+            const searchTerm = query.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                const drugData = card.getAttribute('data-drug');
+                const cardText = card.textContent.toLowerCase();
+                
+                if (searchTerm === '' || drugData.includes(searchTerm) || cardText.includes(searchTerm)) {
+                    card.classList.remove('drug-hidden');
+                } else {
+                    card.classList.add('drug-hidden');
+                }
+            });
+        }
+        
+        // ===== INITIALIZATION =====
+        document.querySelectorAll('.checklist li, .step-list li').forEach((li, i) => {
+            const cb = li.querySelector('input[type="checkbox"]');
+            const btn = li.querySelector('.btn-complete');
+            
+            if (cb) {
+                cb.id = 'cvor_item' + i;
+                const isChecked = localStorage.getItem('cvor_item' + i) === 'true';
+                cb.checked = isChecked;
+                if (isChecked) li.classList.add('completed');
+                
+                cb.addEventListener('change', () => {
+                    li.classList.toggle('completed', cb.checked);
+                    localStorage.setItem('cvor_item' + i, cb.checked);
+                    const section = li.closest('.section');
+                    if (section) updateSectionProgress(section);
+                });
+            }
+            
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (cb) {
+                        cb.checked = !cb.checked;
+                        cb.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+        });
+        
+        // Initialize progress on load
+        updateAllProgress();
+    </script>
+</body>
+</html>
