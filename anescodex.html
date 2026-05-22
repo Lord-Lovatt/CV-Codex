@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="anescodex">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A1428">
+<meta name="format-detection" content="telephone=no">
+<title>anescodex · CV-OR codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A1428;--surface:#0F1B33;--surface-2:#14223F;--surface-3:#1B2B4D;
+  --border:rgba(148,163,184,0.12);--border-2:rgba(148,163,184,0.22);--border-3:rgba(148,163,184,0.35);
+  --text:#F0F4F8;--text-2:#94A3B8;--text-3:#64748B;--text-4:#475569;
+  --accent:#06B6D4;--accent-2:#67E8F9;--accent-bg:rgba(6,182,212,0.10);--accent-border:rgba(6,182,212,0.30);
+  --warn:#F59E0B;--warn-2:#FCD34D;--warn-bg:rgba(245,158,11,0.10);--warn-border:rgba(245,158,11,0.30);
+  --crit:#DC2626;--crit-2:#FCA5A5;--crit-bg:rgba(220,38,38,0.10);--crit-border:rgba(220,38,38,0.35);
+  --ok:#10B981;--ok-2:#6EE7B7;--ok-bg:rgba(16,185,129,0.10);--ok-border:rgba(16,185,129,0.30);
+  --info:#3B82F6;--info-bg:rgba(59,130,246,0.10);--info-border:rgba(59,130,246,0.30);
+  --vaso:#EF4444;--anti:#F59E0B;--sed:#06B6D4;--para:#A78BFA;--fib:#22C55E;--ind:#3B82F6;--inotr:#EC4899;--vdilat:#14B8A6;
+  --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --ease:cubic-bezier(0.32,0.72,0,1);
+  --tap:44px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow:hidden;overscroll-behavior:none}
+button,input,select,textarea{font:inherit;color:inherit;background:none;border:none;outline:none}
+button{cursor:pointer;touch-action:manipulation;text-align:left}
+a{color:var(--accent);text-decoration:none}
+ul,ol{list-style:none}
+input{-webkit-appearance:none;appearance:none}
+::-webkit-scrollbar{display:none}
+*{scrollbar-width:none}
+
+#app{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg);max-width:520px;margin:0 auto;border-left:0.5px solid var(--border);border-right:0.5px solid var(--border)}
+@media (max-width:520px){#app{border:none}}
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:calc(var(--safe-top) + 4px);padding-bottom:calc(82px + var(--safe-bot));scroll-behavior:smooth}
+.fade-in{animation:viewin .3s var(--ease)}
+@keyframes viewin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ========== NAV ========== */
+.navbar{position:sticky;top:0;z-index:50;background:rgba(10,20,40,.86);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);padding:8px 16px 12px;display:flex;align-items:center;gap:6px;border-bottom:0.5px solid var(--border)}
+.nav-back{width:var(--tap);height:var(--tap);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:22px;margin-left:-12px;border-radius:10px;transition:background .15s var(--ease)}
+.nav-back:active{background:var(--surface-2)}
+.nav-title{flex:1;display:flex;flex-direction:column;min-width:0}
+.nav-title strong{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.2px}
+.nav-title small{font-size:11px;color:var(--text-3);margin-top:1px;font-family:var(--mono)}
+.nav-action{width:var(--tap);height:var(--tap);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;border-radius:10px;transition:background .15s var(--ease)}
+.nav-action:active{background:var(--surface-2)}
+.nav-action.on{color:var(--warn)}
+
+/* ========== HOME HEADER ========== */
+.home-hdr{padding:14px 22px 6px}
+.home-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.brand{font-size:26px;font-weight:600;letter-spacing:-0.8px;display:flex;align-items:center;gap:9px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(16,185,129,0.18);animation:pulse 2.4s var(--ease) infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(16,185,129,0.18)}50%{box-shadow:0 0 0 6px rgba(16,185,129,.04)}}
+.brand .ax{color:var(--accent)}
+.user-chip{font-size:11px;font-weight:500;color:var(--text-2);background:var(--surface-2);padding:6px 11px;border-radius:100px;border:0.5px solid var(--border-2);letter-spacing:.3px}
+.sub{font-size:12px;color:var(--text-3);font-family:var(--mono);letter-spacing:.2px}
+
+/* ========== SEARCH ========== */
+.search-trigger{background:var(--surface-2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:11px;margin:14px 22px 18px;font-size:15px;color:var(--text-3);transition:transform .15s var(--ease),background .15s var(--ease);width:calc(100% - 44px)}
+.search-trigger:active{transform:scale(.98);background:var(--surface-3)}
+.search-trigger i{font-size:18px;color:var(--text-2)}
+.search-trigger .kbd{margin-left:auto;font-size:10px;background:rgba(148,163,184,.10);padding:3px 7px;border-radius:5px;border:0.5px solid var(--border-2);font-family:var(--mono);color:var(--text-3)}
+
+/* ========== EMERGENCY TILE ========== */
+.em-tile{margin:0 22px 18px;background:linear-gradient(180deg,rgba(220,38,38,.13),rgba(220,38,38,.07));border:0.5px solid var(--crit-border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:transform .15s var(--ease);width:calc(100% - 44px)}
+.em-tile:active{transform:scale(.98)}
+.em-left{display:flex;align-items:center;gap:13px;min-width:0}
+.em-icon{width:40px;height:40px;background:var(--crit);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0}
+.em-title{font-size:14px;font-weight:600;color:var(--crit-2);letter-spacing:-0.1px}
+.em-sub{font-size:11px;color:var(--crit-2);opacity:.8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.em-arrow{color:var(--crit-2);font-size:20px;flex-shrink:0}
+
+/* ========== SECTION LABELS ========== */
+.section-label{font-size:10px;color:var(--text-3);letter-spacing:1.6px;text-transform:uppercase;margin:0 22px 10px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.section-label .count{color:var(--text-3);letter-spacing:.5px;font-weight:400;text-transform:none;font-family:var(--mono);font-size:10px}
+
+/* ========== RECENTS ========== */
+.recent{display:flex;gap:8px;padding:0 22px 18px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.recent-pill{flex:0 0 auto;background:var(--surface-2);border:0.5px solid var(--border);border-radius:100px;padding:8px 13px;font-size:12px;color:var(--text);display:flex;align-items:center;gap:7px;font-weight:500;transition:transform .15s var(--ease)}
+.recent-pill:active{transform:scale(.95)}
+.recent-pill i{font-size:13px;color:var(--accent)}
+.recent-empty{font-size:12px;color:var(--text-4);padding:8px 0;font-style:italic}
+
+/* ========== PHASE CHIPS ========== */
+.phase-shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 22px 18px}
+.phase-chip{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:10px;transition:all .15s var(--ease)}
+.phase-chip:active{transform:scale(.97);background:var(--surface-2)}
+.phase-chip .ic{width:28px;height:28px;border-radius:8px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.phase-chip .lbl{display:flex;flex-direction:column;min-width:0}
+.phase-chip .lbl strong{font-size:12.5px;font-weight:600;color:var(--text)}
+.phase-chip .lbl small{font-size:10px;color:var(--text-3);font-family:var(--mono);margin-top:1px}
+
+/* ========== HOME GRID ========== */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 22px 22px}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px 13px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s var(--ease),background .15s var(--ease);position:relative}
+.card:active{transform:scale(.97);background:var(--surface-2)}
+.card-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.card-title{font-size:14.5px;font-weight:600;color:var(--text);margin:11px 0 3px;letter-spacing:-0.1px}
+.card-meta{font-size:10.5px;color:var(--text-3);font-family:var(--mono);letter-spacing:.1px}
+.c-laac .card-icon{background:rgba(20,184,166,.13);color:#14B8A6}
+.c-laser .card-icon{background:rgba(244,114,182,.13);color:#F472B6}
+.c-lung .card-icon{background:rgba(167,139,250,.13);color:#A78BFA}
+.c-tavr .card-icon{background:rgba(34,197,94,.13);color:#22C55E}
+.c-opcab .card-icon{background:rgba(245,158,11,.13);color:#F59E0B}
+.c-drugs .card-icon{background:rgba(6,182,212,.13);color:#06B6D4}
+.c-surgeons .card-icon{background:rgba(168,85,247,.13);color:#A855F7}
+.c-setup .card-icon{background:rgba(236,72,153,.13);color:#EC4899}
+.c-procedures .card-icon{background:rgba(59,130,246,.13);color:#3B82F6}
+.c-bypass .card-icon{background:rgba(239,68,68,.13);color:#EF4444}
+.c-srna .card-icon{background:rgba(20,184,166,.13);color:#14B8A6}
+.c-account .card-icon{background:rgba(148,163,184,.13);color:#94A3B8}
+.c-protocols .card-icon{background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(6,182,212,.16));color:#67E8F9;border:0.5px solid rgba(103,232,249,.25)}
+
+/* ========== LISTS (drugs, surgeons) ========== */
+.list-search{padding:10px 22px 12px;position:sticky;top:0;z-index:40;background:rgba(10,20,40,.86);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
+.list-input{background:var(--surface-2);border:0.5px solid var(--border);border-radius:11px;padding:11px 14px;display:flex;align-items:center;gap:10px}
+.list-input i{color:var(--text-2);font-size:17px}
+.list-input input{flex:1;font-size:15px;color:var(--text);min-width:0}
+.list-input input::placeholder{color:var(--text-3)}
+.list-input .clear{color:var(--text-3);font-size:18px;display:none}
+.list-input.has-value .clear{display:block}
+
+.alpha-list{padding:0 22px 14px}
+.alpha-group{margin-bottom:10px}
+.alpha-letter{font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:1.4px;padding:8px 4px 6px;font-family:var(--mono);border-top:0.5px solid var(--border);margin-top:4px}
+.alpha-item{display:flex;align-items:center;gap:12px;padding:12px 4px;border-top:0.5px solid var(--border);min-height:54px;transition:opacity .12s var(--ease)}
+.alpha-item:active{opacity:.6}
+.alpha-item:first-child{border-top:none}
+.alpha-tag{width:4px;height:36px;border-radius:2px;flex-shrink:0}
+.alpha-body{flex:1;min-width:0}
+.alpha-name{font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:-0.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alpha-sub{font-size:11px;color:var(--text-3);font-family:var(--mono);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alpha-chev{color:var(--text-3);font-size:18px;flex-shrink:0}
+
+/* ========== COLLAPSIBLES ========== */
+.collapse{margin:0 22px 10px;border:0.5px solid var(--border);border-radius:13px;background:var(--surface);overflow:hidden;transition:border-color .2s var(--ease)}
+.collapse.open{border-color:var(--border-2)}
+.collapse-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;font-size:14px;font-weight:600;min-height:var(--tap);user-select:none;letter-spacing:-0.1px}
+.collapse-hdr .left{display:flex;align-items:center;gap:10px}
+.collapse-hdr .left .lead{font-size:17px;color:var(--accent)}
+.collapse-hdr .count{font-size:10px;color:var(--text-3);font-weight:400;background:var(--surface-2);padding:3px 8px;border-radius:6px;font-family:var(--mono)}
+.collapse-hdr .chevron{font-size:18px;color:var(--text-3);margin-left:8px;transition:transform .25s var(--ease)}
+.collapse.open .chevron{transform:rotate(180deg)}
+.collapse-body{padding:0 15px 14px;display:none}
+.collapse.open .collapse-body{display:block;animation:slidein .25s var(--ease)}
+@keyframes slidein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ========== CHECKLIST ========== */
+.checklist{display:flex;flex-direction:column}
+.check-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:0.5px solid var(--border);min-height:48px}
+.check-item:first-child{border-top:none;padding-top:6px}
+.check-box{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--border-3);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s var(--ease)}
+.check-item.done .check-box{background:var(--ok);border-color:var(--ok)}
+.check-item.done .check-box::after{content:'';width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+.check-num{width:22px;height:22px;border-radius:50%;background:var(--surface-2);color:var(--text-2);font-family:var(--mono);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:0.5px solid var(--border-2)}
+.check-text{font-size:13px;line-height:1.55;color:var(--text);flex:1}
+.check-item.done .check-text{color:var(--text-3);text-decoration:line-through}
+.check-text .mono{font-family:var(--mono);font-size:12px;color:var(--accent-2);background:var(--accent-bg);padding:1px 6px;border-radius:5px;border:0.5px solid var(--accent-border);text-decoration:none;display:inline-block;margin:0 2px}
+.check-text strong{font-weight:600;color:var(--text)}
+.check-text em{font-style:normal;color:var(--accent-2)}
+
+/* ========== CALLOUT ========== */
+.callout{margin:0 22px 12px;background:var(--crit-bg);border:0.5px solid var(--crit-border);border-radius:13px;padding:13px 14px}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn-border)}
+.callout.info{background:var(--info-bg);border-color:var(--info-border)}
+.callout.ok{background:var(--ok-bg);border-color:var(--ok-border)}
+.callout-title{font-size:11.5px;font-weight:600;color:var(--crit-2);display:flex;align-items:center;gap:8px;margin-bottom:7px;letter-spacing:.4px;text-transform:uppercase}
+.callout.warn .callout-title{color:var(--warn-2)}
+.callout.info .callout-title{color:var(--accent-2)}
+.callout.ok .callout-title{color:var(--ok-2)}
+.callout-title i{font-size:15px}
+.callout-text{font-size:12.5px;color:var(--crit-2);line-height:1.6;opacity:.95}
+.callout.warn .callout-text{color:var(--warn-2)}
+.callout.info .callout-text{color:var(--accent-2)}
+.callout.ok .callout-text{color:var(--ok-2)}
+.callout-text strong{font-weight:600}
+.callout-text ul{margin-top:6px;padding-left:16px;list-style:disc}
+.callout-text ol{margin-top:6px;padding-left:18px;list-style:decimal}
+.callout-text li{margin-bottom:3px}
+
+/* ========== ALERT STRIP ========== */
+.alert-strip{margin:14px 22px 16px;background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:10px;padding:11px 13px;display:flex;align-items:flex-start;gap:10px}
+.alert-strip.crit{background:var(--crit-bg);border-left-color:var(--crit)}
+.alert-strip.info{background:var(--info-bg);border-left-color:var(--info)}
+.alert-strip i{color:var(--warn);font-size:17px;flex-shrink:0;margin-top:1px}
+.alert-strip.crit i{color:var(--crit)}
+.alert-strip.info i{color:var(--info)}
+.alert-text{font-size:12.5px;color:var(--warn-2);line-height:1.55;font-weight:500}
+.alert-strip.crit .alert-text{color:var(--crit-2)}
+.alert-strip.info .alert-text{color:var(--accent-2)}
+
+/* ========== PHASE TABS (protocols) ========== */
+.phase-tabs{display:flex;margin:0 22px 14px;background:var(--surface-2);border-radius:11px;padding:3px;border:0.5px solid var(--border);gap:2px;overflow-x:auto}
+.phase-tab{flex:1;text-align:center;padding:9px 6px;font-size:11.5px;color:var(--text-2);border-radius:9px;font-weight:500;letter-spacing:.2px;transition:all .2s var(--ease);white-space:nowrap;min-width:fit-content}
+.phase-tab.on{background:var(--accent);color:var(--bg);font-weight:600}
+
+/* ========== CHIPS ========== */
+.chips{display:flex;gap:6px;padding:0 22px 14px;flex-wrap:wrap}
+.chip{font-size:11px;padding:6px 11px;border-radius:100px;background:var(--accent-bg);color:var(--accent-2);border:0.5px solid var(--accent-border);font-family:var(--mono);font-weight:500;letter-spacing:.3px}
+.chip.warn{background:var(--warn-bg);color:var(--warn-2);border-color:var(--warn-border)}
+.chip.crit{background:var(--crit-bg);color:var(--crit-2);border-color:var(--crit-border)}
+.chip.ok{background:var(--ok-bg);color:var(--ok-2);border-color:var(--ok-border)}
+
+/* ========== DRUG DETAIL ========== */
+.drug-hero{padding:16px 22px 8px}
+.drug-hero h1{font-size:24px;font-weight:600;letter-spacing:-0.5px;line-height:1.15}
+.drug-hero .generic{font-size:13px;color:var(--text-2);font-family:var(--mono);margin-top:4px}
+.drug-hero .conc{font-size:13px;color:var(--accent-2);font-family:var(--mono);background:var(--accent-bg);border:0.5px solid var(--accent-border);padding:7px 12px;border-radius:8px;margin-top:10px;display:inline-block;max-width:100%;word-break:break-word}
+.drug-dose-table{margin:0 22px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:13px;overflow:hidden}
+.drug-dose-row{display:flex;align-items:flex-start;padding:12px 14px;border-top:0.5px solid var(--border);gap:12px;min-height:54px}
+.drug-dose-row:first-child{border-top:none}
+.drug-dose-row .label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-3);font-weight:600;flex:0 0 100px;padding-top:1px;font-family:var(--mono)}
+.drug-dose-row .value{font-size:13.5px;color:var(--text);flex:1;line-height:1.55;font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+
+/* ========== SURGEON DETAIL ========== */
+.surgeon-hero{padding:14px 22px 10px;display:flex;align-items:center;gap:14px}
+.surgeon-avatar{width:54px;height:54px;border-radius:50%;background:var(--surface-3);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;border:0.5px solid var(--border-2);font-family:var(--mono);letter-spacing:.5px}
+.surgeon-hero h1{font-size:22px;font-weight:600;letter-spacing:-0.4px}
+.surgeon-hero .role{font-size:12px;color:var(--text-3);font-family:var(--mono);margin-top:3px}
+.surgeon-grid{padding:0 22px 6px}
+.surg-row{display:flex;padding:11px 0;border-top:0.5px solid var(--border);gap:14px;align-items:flex-start;min-height:42px}
+.surg-row:first-child{border-top:none}
+.surg-row .lbl{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:1.2px;font-weight:600;flex:0 0 110px;padding-top:2px;font-family:var(--mono)}
+.surg-row .val{font-size:13px;color:var(--text);flex:1;line-height:1.55}
+.surg-row .val.mono{font-family:var(--mono)}
+
+/* ========== TAB BAR ========== */
+.tabbar{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;display:flex;justify-content:space-around;padding:6px 4px calc(6px + var(--safe-bot));background:rgba(10,20,40,.92);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px);border-top:0.5px solid var(--border);z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;font-size:9.5px;color:var(--text-3);letter-spacing:.3px;border-radius:10px;font-weight:500;transition:color .15s var(--ease);min-height:var(--tap)}
+.tab.active{color:var(--accent)}
+.tab i{font-size:21px}
+.tab:active{background:var(--surface-2)}
+
+/* ========== PROGRESS ========== */
+.progress-card{margin:0 22px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px}
+.progress-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-hdr h3{font-size:13px;font-weight:600;color:var(--text)}
+.progress-hdr .pct{font-size:18px;font-weight:600;color:var(--accent);font-family:var(--mono);font-variant-numeric:tabular-nums}
+.progress-bar{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent) 0%,var(--ok) 100%);border-radius:3px;transition:width .35s var(--ease)}
+
+/* ========== TABLES (protocol specs) ========== */
+.spec-table{margin:0 22px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:13px;overflow:hidden}
+.spec-row{display:flex;padding:10px 14px;border-top:0.5px solid var(--border);gap:12px;font-size:12.5px;min-height:42px;align-items:flex-start}
+.spec-row:first-child{border-top:none}
+.spec-row .key{flex:0 0 110px;color:var(--text-3);font-weight:500;font-family:var(--mono);text-transform:uppercase;font-size:10.5px;letter-spacing:1px;padding-top:2px}
+.spec-row .val{flex:1;color:var(--text);line-height:1.55;font-size:12.5px}
+.spec-row .val .mono{font-family:var(--mono);color:var(--accent-2)}
+.spec-row .val strong{font-weight:600}
+
+/* ========== EMPTY ========== */
+.empty{text-align:center;padding:48px 22px;color:var(--text-3);font-size:13px}
+.empty i{font-size:32px;color:var(--text-4);margin-bottom:10px;display:block}
+
+/* ========== SEARCH RESULTS ========== */
+.results{padding:0 22px}
+.result{padding:13px 0;border-top:0.5px solid var(--border)}
+.result:first-child{border-top:none}
+.result:active{opacity:.6}
+.result-where{font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-weight:600}
+.result-title{font-size:14px;color:var(--text);margin-bottom:3px;font-weight:500}
+.result-snippet{font-size:12px;color:var(--text-2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.result-snippet mark{background:var(--accent-bg);color:var(--accent-2);padding:0 3px;border-radius:3px}
+
+/* ========== EM CARDS ========== */
+.em-hero{margin:14px 22px 16px;padding:20px 18px;background:linear-gradient(180deg,rgba(220,38,38,.18),rgba(220,38,38,.08));border:0.5px solid var(--crit-border);border-radius:16px;text-align:center}
+.em-hero-icon{width:52px;height:52px;background:var(--crit);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;margin:0 auto 12px}
+.em-hero-title{font-size:17px;font-weight:600;color:var(--crit-2);letter-spacing:-0.3px;margin-bottom:4px}
+.em-hero-sub{font-size:12px;color:var(--crit-2);opacity:.8;font-family:var(--mono)}
+.em-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 22px 14px}
+.em-card{background:var(--surface);border:0.5px solid var(--border);border-radius:13px;padding:14px 12px;transition:all .15s var(--ease)}
+.em-card:active{transform:scale(.97);background:var(--surface-2);border-color:var(--crit-border)}
+.em-card-icon{width:32px;height:32px;border-radius:9px;background:var(--crit-bg);color:var(--crit-2);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:10px}
+.em-card-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:3px;letter-spacing:-0.1px}
+.em-card-sub{font-size:10.5px;color:var(--text-3);font-family:var(--mono)}
+
+/* ========== FOOTER ========== */
+.version-foot{padding:18px 22px 8px;font-size:10px;color:var(--text-4);display:flex;justify-content:space-between;font-family:var(--mono);letter-spacing:.3px}
+
+/* ========== PROCEDURE STEP CARDS ========== */
+.step-card{margin:0 22px 10px;background:var(--surface);border:0.5px solid var(--border);border-radius:13px;overflow:hidden;display:block;width:calc(100% - 44px)}
+.step-card:active{background:var(--surface-2)}
+.step-card-row{display:flex;align-items:center;padding:14px 15px;gap:12px}
+.step-num{width:34px;height:34px;border-radius:10px;background:var(--accent-bg);color:var(--accent-2);font-family:var(--mono);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:0.5px solid var(--accent-border)}
+.step-info{flex:1;min-width:0}
+.step-info strong{font-size:14px;font-weight:600;display:block;letter-spacing:-0.1px}
+.step-info small{font-size:11px;color:var(--text-3);font-family:var(--mono);margin-top:2px;display:block}
+.step-chev{color:var(--text-3);font-size:18px;flex-shrink:0}
+
+/* ========== ICONS ========== */
+.icon{display:inline-block;width:1em;height:1em;stroke-width:2;stroke:currentColor;fill:none;vertical-align:-2px}
+</style>
+</head>
+<body>
+<div id="app">
+  <main id="view-root"></main>
+  <nav class="tabbar" id="tabbar">
+    <button class="tab" data-route="home"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/></svg><span>Home</span></button>
+    <button class="tab" data-route="drugs"><svg class="icon" viewBox="0 0 24 24"><path d="M5 8h14"/><path d="M5 12h14"/><path d="M5 16h14"/><path d="M3 3l18 0"/><path d="M5 3v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-18"/></svg><span>Drugs</span></button>
+    <button class="tab" data-route="cases"><svg class="icon" viewBox="0 0 24 24"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.566z"/></svg><span>Cases</span></button>
+    <button class="tab" data-route="surgeons"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 11l2 2l4 -4"/></svg><span>Surgeons</span></button>
+    <button class="tab" data-route="more"><svg class="icon" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></button>
+  </nav>
+</div>
+
+<script>
+/* ========== ICONS ========== */
+const ICON={
+  back:'<svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6l6 6"/></svg>',
+  bolt:'<svg class="icon" viewBox="0 0 24 24"><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>',
+  search:'<svg class="icon" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M21 21l-6 -6"/></svg>',
+  heart:'<svg class="icon" viewBox="0 0 24 24"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.566z"/></svg>',
+  lungs:'<svg class="icon" viewBox="0 0 24 24"><path d="M6.081 20c1.612 0 2.919 -1.335 2.919 -2.98v-7.293l-1.105 -.391a4.075 4.075 0 0 0 -4.692 1.564a4.314 4.314 0 0 0 -.598 3.8l1.99 3.8c.31 .822 .885 1.5 1.486 1.5z"/><path d="M17.919 20c-1.612 0 -2.919 -1.335 -2.919 -2.98v-7.293l1.105 -.391a4.075 4.075 0 0 1 4.692 1.564a4.314 4.314 0 0 1 .598 3.8l-1.99 3.8c-.31 .822 -.885 1.5 -1.486 1.5z"/><path d="M9 10v-5a2 2 0 1 1 4 0v5"/></svg>',
+  flask:'<svg class="icon" viewBox="0 0 24 24"><path d="M9 3l6 0"/><path d="M10 9l4 0"/><path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6"/></svg>',
+  clock:'<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+  chevR:'<svg class="icon" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></svg>',
+  chevD:'<svg class="icon" viewBox="0 0 24 24"><path d="M6 9l6 6l6 -6"/></svg>',
+  warn:'<svg class="icon" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16h.01"/></svg>',
+  alert:'<svg class="icon" viewBox="0 0 24 24"><path d="M12 8v4"/><circle cx="12" cy="12" r="9"/><path d="M12 16h.01"/></svg>',
+  syringe:'<svg class="icon" viewBox="0 0 24 24"><path d="M18 2l4 4"/><path d="M14 6l6 6"/><path d="M19 11l-7.5 7.5a3.536 3.536 0 0 1 -5 -5l7.5 -7.5"/><path d="M9.5 14.5l4 4"/></svg>',
+  list:'<svg class="icon" viewBox="0 0 24 24"><path d="M3.5 5.5l1.5 1.5l2.5 -2.5"/><path d="M3.5 11.5l1.5 1.5l2.5 -2.5"/><path d="M3.5 17.5l1.5 1.5l2.5 -2.5"/><path d="M11 6l9 0"/><path d="M11 12l9 0"/><path d="M11 18l9 0"/></svg>',
+  beat:'<svg class="icon" viewBox="0 0 24 24"><path d="M19.5 12.572l-1.5 1.428l-2 -4l-3 6l-2 -3h-9"/><path d="M3.001 12.572a5 5 0 0 1 9 -3l3 3"/></svg>',
+  book:'<svg class="icon" viewBox="0 0 24 24"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6l0 13"/><path d="M12 6l0 13"/><path d="M21 6l0 13"/></svg>',
+  user:'<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>',
+  users:'<svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>',
+  pill:'<svg class="icon" viewBox="0 0 24 24"><path d="M4.5 12.5l8 -8a4.94 4.94 0 0 1 7 7l-8 8a4.94 4.94 0 0 1 -7 -7"/><path d="M8.5 8.5l7 7"/></svg>',
+  cog:'<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06 .06a2 2 0 0 1 0 2.83a2 2 0 0 1 -2.83 0l-.06 -.06a1.65 1.65 0 0 0 -1.82 -.33a1.65 1.65 0 0 0 -1 1.51v.17a2 2 0 0 1 -2 2a2 2 0 0 1 -2 -2v-.09a1.65 1.65 0 0 0 -1 -1.51a1.65 1.65 0 0 0 -1.82 .33l-.06 .06a2 2 0 0 1 -2.83 0a2 2 0 0 1 0 -2.83l.06 -.06a1.65 1.65 0 0 0 .33 -1.82a1.65 1.65 0 0 0 -1.51 -1H3a2 2 0 0 1 -2 -2a2 2 0 0 1 2 -2h.09a1.65 1.65 0 0 0 1.51 -1a1.65 1.65 0 0 0 -.33 -1.82l-.06 -.06a2 2 0 0 1 0 -2.83a2 2 0 0 1 2.83 0l.06 .06a1.65 1.65 0 0 0 1.82 .33h.09a1.65 1.65 0 0 0 1 -1.51V3a2 2 0 0 1 2 -2a2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51a1.65 1.65 0 0 0 1.82 -.33l.06 -.06a2 2 0 0 1 2.83 0a2 2 0 0 1 0 2.83l-.06 .06a1.65 1.65 0 0 0 -.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-.09a1.65 1.65 0 0 0 -1.51 1z"/></svg>',
+  dots:'<svg class="icon" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>',
+  needle:'<svg class="icon" viewBox="0 0 24 24"><path d="M3 21l3 0l13 -13l-3 -3l-13 13l0 3"/></svg>',
+  position:'<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5v-3"/><path d="M12 22v-3"/></svg>',
+  fire:'<svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>',
+  drop:'<svg class="icon" viewBox="0 0 24 24"><path d="M6.8 11a6 6 0 1 0 10.396 0l-5.197 -8l-5.2 8z"/></svg>',
+  bookmark:'<svg class="icon" viewBox="0 0 24 24"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"/></svg>',
+  phone:'<svg class="icon" viewBox="0 0 24 24"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg>',
+  mail:'<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6l9 -6"/></svg>',
+  x:'<svg class="icon" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>',
+  scan:'<svg class="icon" viewBox="0 0 24 24"><path d="M4 7v-1a2 2 0 0 1 2 -2h2"/><path d="M4 17v1a2 2 0 0 0 2 2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v1"/><path d="M16 20h2a2 2 0 0 0 2 -2v-1"/><path d="M5 12h14"/></svg>',
+  star:'<svg class="icon" viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>',
+};
+
+/* ========== DATA ========== */
+const SETUP_ITEMS={
+  syringes:[
+    "60 mL syringe — Heparin (1000 U/mL)",
+    "20 mL syringe — Propofol (do not draw until induction)",
+    "10 mL syringe — Rocuronium (100 mg / 10 mL)",
+    "10 mL syringe — Ephedrine (5 mg/mL)",
+    "10 mL syringe — Epi (4 mcg/mL from 1 mg/250 mL bag)",
+    "10 mL syringe — Fentanyl (250–500 mcg)",
+    "10 mL syringe — TXA (1000 mg / 10 mL)",
+    "Pre-mixed 10 mL — Neosynephrine (100 mcg/mL)",
+    "5 mL syringe — Versed (1 mg/mL)",
+    "5 mL syringe — Lidocaine (100 mg / 5 mL)",
+  ],
+  ivbags:[
+    "500 mL NS bag + TXA 1000 mg + pump tubing + train + 3″ extension stopcock",
+    "NTG pre-mixed bottle with micro-drip and dial flow",
+    "Pre-mixed Precedex bag (400 mcg / 100 mL NS)",
+  ],
+  airway:[
+    "ETT 8.0","Stylet","10 mL syringe (for cuff)","McGrath 3 or 4 blade",
+    "White silk narrow tape","Clear tape or 2 Tegaderms","Small pack of lubricant",
+  ],
+  misc:[
+    "Clear eyeguard + towel for patient face",
+    "Isolyte 1000 mL with blood set and short extension",
+    "Temp probe — insert ONE inch only to nares",
+    "OG tube (gastric decompression — before TEE)",
+    "9F 2-lumen CVL set",
+    "Dual slick 7F",
+    "Swan-Ganz if requested",
+    "Sterile gloves × 2",
+  ],
+  lowef:[
+    "Pre-mixed Epi (4 mg / 250 mL NS) on pump",
+    "Milrinone (20 mg / 100 mL) on pump",
+  ],
+};
+
+const BYPASS_ITEMS=[
+  "Sevoflurane & O₂ flow — OFF",
+  'Announce "SEVO OFF"',
+  "Circuit > low flows 0.2 L",
+  "ANES Machine screen > set to Cardiac Bypass",
+  "Vital signs screen > selected",
+  "Vital sounds screen alarms > off",
+  "Central/peripheral IV lines > off",
+  "TXA/DXA/all other drips > infusing",
+  "Check meds, concentrations, bags > infusing",
+  "TEE machine > freeze",
+];
+
+const PROCEDURE_STEPS=[
+  {n:1,title:"PreOp & Board Check",sub:"arrival · assignment",content:[
+    {type:'list',items:[
+      "On arrival at CV-OR 2nd Floor, sign in (personal lunch box to CV lounge <span class='mono'>5310#</span>)",
+      "Check your assignment (be flexible — CV assignments often change)",
+      "If not assigned, check with CV charge MD <span class='mono'>609-1091</span>",
+    ]},
+  ]},
+  {n:2,title:"Arrival in OR",sub:"setup · 30 min target",content:[
+    {type:'list',items:[
+      "Find your OR and set up for your case",
+      "Plan <strong>≤ 30 min</strong> to complete the correct setup",
+      "Test battery in pacemaker, verify function",
+    ]},
+  ]},
+  {n:3,title:"Meeting Patient & Admin",sub:"ID · consent · O₂",content:[
+    {type:'list',items:[
+      "Meet patient in pre-op (or from CV-ICU, 9900, floor, ER, cath lab, downstairs pre-op, or flight)",
+      "Greet patient, perform ID verification",
+      "Verify allergy and blood bank ID band",
+      "Place O₂ NC onto patient",
+      "Perform H&P",
+      "Check consent ×3 (surgical, anesthesia, blood)",
+      "Make sure attending MD speaks to patient",
+    ]},
+    {type:'callout',variant:'crit',title:'Critical',text:'If any consents are missing, you can still proceed with a-line but <strong>CANNOT sedate the patient</strong>. Ask for help if you cannot place IV or A-line.'},
+  ]},
+  {n:4,title:"Patient Arrival in OR",sub:"FloTrac · CVP zeroed pre-induction",content:[
+    {type:'list',items:[
+      "Check into computer, open macro (verify monitors in correct OR)",
+      "Select Cardiovasc/Thoracic tab, then Cardiac CVP/FloTrac",
+      "Transfer patient to OR table, hook up lines — non-invasive BP ×1 only",
+    ]},
+    {type:'callout',variant:'info',title:'FloTrac',text:'Uses CVP + BP to calculate SVR, CO/CI, SVV at <span class="mono">15 kHz</span>. Essential that CVP, SBP, DBP and FloTrac transducers be hooked up, zeroed (right atrium baseline), and collecting data <strong>prior to induction</strong>.'},
+    {type:'list',items:[
+      "Pre-O₂ while RNs position patient",
+      "Commence induction; be vigilant with VS",
+      "Tape ETT on <strong>right</strong> side (center clear for TEE probe)",
+    ]},
+    {type:'callout',variant:'warn',title:'Mandatory',text:'2D ultrasound is mandatory during CVL placement for CRNA and SRNA.'},
+  ]},
+  {n:5,title:"Surgical Pause",sub:"identify out-of-normal data",content:[
+    {type:'note',text:'Critical moment to identify and address any out-of-normal data, patient-specific issues, and key aspects of the upcoming procedure.'},
+    {type:'subhead',text:'Verification checklist'},
+    {type:'list',items:[
+      "Patient name & DOB","Allergies","BSA (for valve prosthesis sizing)",
+      "Antibiotic infused, time of administration","Out-of-range labs",
+      "Disease history if impactful","Known organ diseases","HIV/Hep status",
+      "Implants & equipment","Blood products — RBCs in room and checked",
+      "Prep","Issues and concerns — TEE results",
+    ]},
+    {type:'callout',variant:'warn',title:'Attention required',text:'<strong>Focus on issues and solutions identified.</strong> Your full attention should be on this final readiness check.'},
+  ]},
+  {n:6,title:"Pre-Bypass",sub:"ACT call-outs · 250 · 450",content:[
+    {type:'list',items:[
+      "On surgeon arrival, position to specific requirements",
+      "Be vigilant with VS",
+      "Lungs completely down for sternotomy",
+      "Maintain required MAP for duration of pre-bypass period",
+    ]},
+    {type:'subhead',text:'Prior to BP med admin'},
+    {type:'list',items:[
+      "Look into the surgical field",
+      "Check transducer position",
+      "Stay alert for reduction in BP",
+      "Stay alert for any arrhythmia",
+    ]},
+    {type:'subhead',text:'ACT protocol — verbal call-outs'},
+    {type:'list',items:[
+      "Stay alert for heparin request from surgeon",
+      "When administered, state dose to perfusionist",
+      "Initiate Hemochron warm-up (<span class='mono'>3 min</span> heparin circulation)",
+      "At start: announce <em>“ACT IS IN PROCESS”</em>",
+      "At <span class='mono'>250</span>: announce <em>“250 AND CLIMBING”</em> — expect perfusionist response",
+      "At <span class='mono'>450</span>: announce <em>“450 — GOOD TO GO, STILL CLIMBING”</em>",
+    ]},
+    {type:'callout',variant:'warn',title:'Awareness',text:'Risk of <strong>tunnel vision</strong>. Stay aware of what is going on in the surgical field. Maintain situational awareness.'},
+  ]},
+  {n:7,title:"On Bypass",sub:"R→L sweep · bypass checklist",content:[
+    {type:'list',items:[
+      "Once bypass established, perform R→L sweep — <strong>execute checklist</strong>",
+      "Make ready to flush retrograde line pressure from CVP port",
+      "Tidy up workspace; silence FloTrac",
+      "Check and update charting; prepare for coming off CPB",
+      'Decide from TEE which drugs are needed — communicate with attending, surgeon, perfusionist',
+      '<em>“Air and Water”</em> means only Precedex & TXA (Dr. Accola)',
+      "Initiate CV-ICU handoff checklist",
+      "Politely ask surgeon if you can step out",
+      "Circulator and OR team have your contact #",
+      "Mix Protamine, <strong>SET ASIDE</strong> in readiness",
+    ]},
+    {type:'callout',variant:'crit',title:'Do not',text:'<strong>Do not hang or connect Protamine to patient.</strong> Do not leave CV floor.'},
+    {type:'list',items:["Commence dry setup for next case (full CV heart setup <strong>without meds</strong>)"]},
+    {type:'cta',text:'Open bypass initiation checklist',route:'bypass'},
+  ]},
+  {n:8,title:"Post Bypass",sub:"protamine · labs · OG · CVL dressing",content:[
+    {type:'list',items:[
+      "All required drips running (preferred: pressors after aortic clamp off)",
+      "Call attending MD to evaluate and confirm TEE before separation from CPB",
+      "Verify all data sources flowing properly (FloTrac, CVP)",
+      "When cleared by surgeon AND perfusionist <strong>(MANDATORY)</strong>, initiate Protamine (test dose recommended)",
+      "Maintain clear spoken <strong>3-way communication</strong>",
+      "Ensure ANCEF given <span class='mono'>q4h</span> or after bypass",
+      "Perform ALL labs and i-STAT initially after protamine infused",
+      "Post-wires labs strongly encouraged — do not bring acidotic pt to CVICU",
+      "After TEE removed (call attending for permission), place OG and change CVL dressing — sterile",
+    ]},
+    {type:'callout',variant:'info',title:'Lab correction',text:'Appropriate schedule depends on many factors. If correcting multiple labs concurrently, check outcomes more frequently.'},
+  ]},
+  {n:9,title:"Transport to CV-ICU",sub:"pacemaker · transport vent if 9900",content:[
+    {type:'list',items:[
+      "Transport pumps with OR IV pole (adjust height)",
+      "Tidy lines for movement to CV-ICU bed",
+      "Sufficient warm fluids available on IV pole",
+      "Emergency drugs available during travel",
+      "Complete CV-ICU handoff checklist (retain yellow copy after report)",
+    ]},
+    {type:'callout',variant:'crit',title:'Mandatory equipment',text:'Pacemaker · red transport ventilator if transporting to 9900. <strong>All patients travel to CVICU with pacemaker — no exceptions.</strong>'},
+  ]},
+  {n:10,title:"Charting",sub:"EPIC · MD claim",content:[
+    {type:'list',items:[
+      "Verify accuracy of records under Meds/Fluids tab",
+      "Verify all elements of EPIC complete and correct",
+      "Ensure chart records completed and saved for attending review",
+      "MD claim must be filled out",
+    ]},
+  ]},
+];
+
+const PROTOCOLS={
+  laac:{
+    id:'laac',title:'LAAC',full:'Left Atrial Appendage Closure',cardSub:'GA · DL · 45° tilt',icon:'heart',colorClass:'c-laac',version:'v1.1 · reviewed 03/2026',
+    alert:{type:'info',text:'NVAF patients are at high stroke risk. 90% of NVAF thrombi originate from the LAA. LAAC has a role in patients with contraindication to anticoagulation.'},
+    chips:[{t:'GA · DL'},{t:'Left lung down whole case',c:'warn'},{t:'2 U RBC on ice'},{t:'TEE for clip position'}],
+    phases:{or:[
+      {type:'spec',rows:[
+        ['Anesthesia','GA, DL, <strong>left lung down entire procedure</strong>'],
+        ['Lines','PIV 16G · CVL 8F2L · A-line · TEE for AtriClip position'],
+        ['Position','Supine with 45° large gel-roll bump, left thorax exposed to posterior axillary line'],
+        ['Right arm','Pink foam, tucked'],
+        ['Left arm','Yellow gel full length, tucked posteriorly'],
+        ['Table','Whole bed tilted <span class="mono">10°</span> to the right'],
+        ['Ports','3 VATS ports: 2nd, 4th, and 6th or 7th intercostal space'],
+        ['Blood','2 units RBC on ice in OR'],
+        ['Post-op','Plan to extubate, to PACU (monitored). AtriClip ~<span class="mono">30 min</span>. Ablation adds <span class="mono">2+ hr</span>'],
+      ]},
+    ]},
+  },
+  laser:{
+    id:'laser',title:'Laser lead',full:'Laser lead extraction',cardSub:'Extraction · GA',icon:'bolt',colorClass:'c-laser',version:'v1.9 · reviewed 03/2026',
+    alert:{type:'crit',text:'Laser sheath takes myocardium — anticipate PVCs, VT, VF. Perfusionist on stand-by; 2–4 U PRBC ready.'},
+    chips:[{t:'Heparin 60 mL ready'},{t:'2–4 U PRBC',c:'warn'},{t:'Perfusion stand-by',c:'warn'},{t:'Pacemaker rep present'}],
+    phases:{
+      preop:[
+        {type:'collapse',title:'Preparation',icon:'list',open:true,items:[
+          {type:'check',n:1,text:'Set up OR (including pacemaker) as for heart case — <em>less TXA and Precedex</em>'},
+          {type:'check',n:2,text:'Check if pacemaker rep is present'},
+          {type:'check',n:3,text:'Perfusionist ready for stand-by'},
+          {type:'check',n:4,text:'Laser tech present'},
+          {type:'check',n:5,text:'X-ray tech present'},
+          {type:'check',n:6,text:'Heparin syringe <span class="mono">60 mL</span> <strong>READY TO GO</strong>'},
+          {type:'check',n:7,text:'2–4 U RBC (low EF / low H&H → 2 U on ice in OR)'},
+        ]},
+        {type:'callout',variant:'info',title:'Pacemaker dependent?',text:'<strong>YES</strong> — check with rep, to OR (PIV, A-line, GA, ETT), CVL for temp pacer wire, TEE for clots/effusion. <strong>NO</strong> — to OR (PIV, A-line, GA, ETT), TEE.'},
+      ],
+      or:[
+        {type:'collapse',title:'Sequence',icon:'list',open:true,items:[
+          {type:'check',n:1,text:'Pt induced, ETT'},
+          {type:'check',n:2,text:'If pacemaker-dependent → temporary inserted'},
+          {type:'check',n:3,text:'Right IJ cannulated with <span class="mono">7F</span> peel-off introducer. Leave sterile drape; surgeon floats temp wire.'},
+          {type:'check',n:4,text:'Rep turns pacemaker off, connects temp pacer (<strong>wear lead under sterile gown</strong>)'},
+          {type:'check',n:5,text:'No rep → hook to our pacer, A output to zero, V-pace single wire'},
+          {type:'check',n:6,text:'If LASER chosen → surgeon places femoral venous line; spike <span class="mono">1000 mL</span> crystalloid'},
+          {type:'check',n:7,text:'CS lead first (laser only to coronary ostium). Atrial usually easy; ventricular may be cemented.'},
+          {type:'check',n:8,text:'<strong>Anticipate PVCs, VT, VF</strong> — laser takes myocardium'},
+          {type:'check',n:9,text:'Last <span class="mono">10 cm</span> → surgeon may request vent off for X-ray'},
+        ]},
+        {type:'callout',variant:'warn',title:'Pain management',text:'Laser extraction is painful. Dilaudid works well. Plan: extubate at end, transport <strong>monitored</strong> to PACU.'},
+      ],
+      postop:[
+        {type:'collapse',title:'Epicardial lead variant',icon:'beat',open:true,items:[
+          {type:'note',text:'Pt rolled <span class="mono">45°</span> right, arm tucked posteriorly with gel strip (no pink foam)'},
+          {type:'note',text:'GA, PIV, A-line, CVL'},
+          {type:'note',text:'TEE tech marks externally before prep'},
+          {type:'note',text:'If low lung function → consider DLT; otherwise long lung-down periods'},
+          {type:'note',text:'TEE active. <strong>Watch for VF when Bovie on heart</strong>'},
+          {type:'note',text:'Epicardial lead often tunneled across chest to right subclavicular pocket'},
+          {type:'note',text:'Monitor chest tube output from epicardial site'},
+        ]},
+      ],
+      complications:[
+        {type:'collapse',title:'Recognized complications',icon:'warn',open:true,items:[
+          {type:'note',text:'<strong>VT / VF</strong> during extraction — defib pads on pre-prep'},
+          {type:'note',text:'<strong>Cardiac perforation / tamponade</strong> — TEE surveillance critical'},
+          {type:'note',text:'<strong>Vascular tear</strong> — SVC injury; perfusion ready'},
+          {type:'note',text:'<strong>Hemorrhage</strong> — open conversion'},
+          {type:'note',text:'<strong>Embolic events</strong> — pulmonary, systemic'},
+        ]},
+      ],
+    },
+  },
+  lung:{
+    id:'lung',title:'Robotic lung',full:'Robotic lung resection',cardSub:'OLV · lateral',icon:'lungs',colorClass:'c-lung',version:'v2.0 · reviewed 02/2026',
+    alert:{type:'warn',text:'Verify bean bag placement before draping. Position-related injuries are the most common avoidable adverse event.'},
+    chips:[{t:'EBL < 50 mL',c:'ok'},{t:'Fluids < 1000 mL',c:'ok'},{t:'CVP < 10'},{t:'OLV at trochar insertion',c:'warn'}],
+    phases:{
+      preop:[
+        {type:'spec',rows:[
+          ['Position','Lateral'],
+          ['Incision','4–5 openings'],
+          ['Instrumentation','DLT or ETT + bronchial blocker; paravertebral block; DL + FO cart'],
+          ['Surgical time','<span class="mono">1–3 hr</span>'],
+          ['EBL','<span class="mono">&lt; 50 cc</span>'],
+          ['Post-op','PACU → ICU'],
+          ['Age range','40–80'],
+          ['Etiology','Smoking'],
+        ]},
+        {type:'collapse',title:'Workup',icon:'list',open:true,items:[
+          {type:'check',n:1,text:'PFTs reviewed'},
+          {type:'check',n:2,text:'CV workup: EKG, CXR, scan'},
+          {type:'check',n:3,text:'Type & cross'},
+          {type:'check',n:4,text:'Methocarbamol + acetaminophen PO leaving for OR'},
+          {type:'check',n:5,text:'Verify bean bag placement'},
+        ]},
+        {type:'collapse',title:'Technique options',icon:'beat',items:[
+          {type:'note',text:'<strong>A:</strong> inhalation alone'},
+          {type:'note',text:'<strong>B:</strong> inhalation + paravertebral block (call pre-op <span class="mono">20 min</span> ahead for block cart)'},
+          {type:'note',text:'<strong>C:</strong> inhalation + Exparel infiltration'},
+        ]},
+      ],
+      or:[
+        {type:'collapse',title:'Induction & airway',icon:'syringe',open:true,items:[
+          {type:'check',n:1,text:'Standard induction'},
+          {type:'check',n:2,text:'DLT or ETT with bronchial blocker'},
+          {type:'check',n:3,text:'Minimize narcotics if regional / Exparel planned'},
+        ]},
+        {type:'collapse',title:'Lines & monitoring',icon:'needle',open:true,items:[
+          {type:'check',n:1,text:'Two large-bore PIVs <em>or</em> PIV + 8F 2-lumen (ask PA)'},
+          {type:'check',n:2,text:'A-line'},
+          {type:'check',n:3,text:'Foley'},
+          {type:'check',n:4,text:'CVP & FloTrac optional'},
+        ]},
+        {type:'collapse',title:'Positioning sequence',icon:'position',open:true,items:[
+          {type:'check',n:1,text:'Iliac crest at table break point'},
+          {type:'check',n:2,text:'Rotate patient to lateral'},
+          {type:'check',n:3,text:'Axillary roll'},
+          {type:'check',n:4,text:'Flex table'},
+          {type:'check',n:5,text:'Reverse Trendelenburg'},
+          {type:'check',n:6,text:'Feet up — <strong>watch at all times</strong>'},
+          {type:'check',n:7,text:'Ideal: horizontal between shoulders & hip'},
+          {type:'check',n:8,text:'Bottom arm sandwiched in pink foam on armboard'},
+          {type:'check',n:9,text:'Upper arm restrained, pink-foam sandwiched'},
+          {type:'check',n:10,text:'<strong>Verify</strong> head/neck alignment, ulnar nerve cradled'},
+          {type:'check',n:11,text:'Confirm placement right after lateral positioning'},
+        ]},
+        {type:'callout',variant:'warn',title:'Lung isolation',text:'Initiate OLV as surgeon enters OR. Lungs completely down and disconnected for trochar insertion.'},
+      ],
+      postop:[
+        {type:'collapse',title:'Emergence',icon:'beat',open:true,items:[
+          {type:'check',n:1,text:'Patient rotated lateral → supine; HOB <span class="mono">40°</span>'},
+          {type:'check',n:2,text:'Extubate when indicated'},
+          {type:'check',n:3,text:'Non-rebreather for transport to PACU'},
+          {type:'check',n:4,text:'Monitor BP / HR / SaO₂'},
+        ]},
+        {type:'collapse',title:'Pain management',icon:'syringe',open:true,items:[
+          {type:'note',text:'Local infiltration by surgeon / PA — Exparel'},
+          {type:'note',text:'<strong>Hydromorphone via epidural by age:</strong> &lt; 60 → <span class="mono">0.6 mg</span> · &gt; 60 → <span class="mono">0.4 mg</span> · &gt; 70 → <span class="mono">0.2 mg</span>'},
+          {type:'note',text:'Acetaminophen <span class="mono">1 g</span>; methocarbamol <span class="mono">1 g</span> (split 500/500)'},
+          {type:'note',text:'Ketamine <span class="mono">50 mg</span> IV over <span class="mono">2–3 hr</span>'},
+          {type:'note',text:'Precedex <span class="mono">0.4 mcg/kg/min</span>'},
+        ]},
+      ],
+      complications:[
+        {type:'collapse',title:'Recognized complications',icon:'warn',open:true,items:[
+          {type:'note',text:'Airway trauma from intubation'},
+          {type:'note',text:'Tracheobronchial rupture'},
+          {type:'note',text:'Lateral-position injuries (brachial plexus, ulnar)'},
+          {type:'note',text:'Dysrhythmia · pain · PE · MI'},
+          {type:'note',text:'Bronchopleural fistula · chylothorax · subcutaneous emphysema'},
+          {type:'note',text:'Phrenic / recurrent laryngeal nerve injury'},
+        ]},
+        {type:'callout',variant:'crit',title:'Emergency chest opening',text:'Call attending, anes tech, surgical assistants. Notify perfusion (CPB possible). Open fluids. Robot retracted. Release arms for supine. If no CVL — prep. Blood products in room.'},
+      ],
+    },
+  },
+  tavr:{
+    id:'tavr',title:'TAVR',full:'Transfemoral TAVR · MAC',cardSub:'Transfemoral · MAC',icon:'heart',colorClass:'c-tavr',version:'v2.1 · reviewed 04/2026',
+    alert:{type:'warn',text:'Low EF common. During rapid pace expect <span class="mono">15–30 s</span> severe hypotension — this is normal. <strong>Do not treat.</strong>'},
+    chips:[{t:'ACT ≈ 300 s'},{t:'MAP 70–75'},{t:'SBP ≈100 pre-pace',c:'warn'},{t:'PP < 10 pre-balloon',c:'crit'}],
+    phases:{
+      preop:[
+        {type:'collapse',title:'Considerations',icon:'alert',open:true,items:[
+          {type:'note',text:'Low EF patients common — review preop TTE'},
+          {type:'note',text:'Verify contrast dye allergy'},
+          {type:'note',text:'Baseline neuro assessment for post-op comparison'},
+          {type:'note',text:'<strong>Lead apron available</strong> — fluoroscopic case'},
+          {type:'note',text:'Consult attending for MAC preferences; default to this protocol if no guidance'},
+        ]},
+        {type:'collapse',title:'Lines & monitoring',icon:'needle',open:true,items:[
+          {type:'check',n:1,text:'Two large-bore PIVs'},
+          {type:'check',n:2,text:'A-line — zero before transfer'},
+          {type:'check',n:3,text:'Precedex infusion at <span class="mono">0.7 mcg/kg/hr</span>'},
+        ]},
+      ],
+      or:[
+        {type:'collapse',title:'Drug setup',icon:'syringe',open:true,drugs:[
+          {tag:'anti',name:'Heparin',sub:'20 mL · 1000 U/mL',dose:'~100 U/kg'},
+          {tag:'vaso',name:'Phenylephrine',sub:'10 mL · 100 mcg/mL',dose:'50–100 mcg'},
+          {tag:'vaso',name:'Ephedrine',sub:'10 mL · 5 mg/mL',dose:'5–10 mg'},
+          {tag:'vaso',name:'Epinephrine push',sub:'10 mL · 4 mcg/mL',dose:'4–20 mcg'},
+          {tag:'vaso',name:'Epi (code dose)',sub:'10 mL · 16 mcg/mL',dose:'prn'},
+          {tag:'fib',name:'Calcium chloride',sub:'10% · ready',dose:'1 g prn'},
+          {tag:'sed',name:'Precedex drip',sub:'400 mcg / 100 mL',dose:'0.7 mcg/kg/hr'},
+          {tag:'vdilat',name:'NTG drip',sub:'on pump · ready',dose:'titrate MAP'},
+          {tag:'inotr',name:'Epi drip',sub:'on pump · ready (not connected)',dose:'standby'},
+        ]},
+        {type:'callout',variant:'crit',title:'Rapid pace — critical window',text:'BP drops severely for <span class="mono">15–30 s</span> during balloon inflation. Recovery expected within <span class="mono">30–60 s</span>. If flat <span class="mono">≥ 6 s</span>: pause surgeon, request pacing, treat BP — vasopressor here may overshoot and prevent valve positioning.'},
+        {type:'collapse',title:'Surgical sequence',icon:'list',open:true,items:[
+          {type:'check',n:1,text:'Cardiologist establishes femoral sheath (can be painful)'},
+          {type:'check',n:2,text:'Listen for direction to give heparin'},
+          {type:'check',n:3,text:'Draw ACT — target <span class="mono">~300 s</span>, verbally report'},
+          {type:'check',n:4,text:'BAV — balloon crushes calcified AV'},
+          {type:'check',n:5,text:'New valve crimped on catheter, delivered to AV'},
+          {type:'check',n:6,text:'Rapid pace + balloon inflation expands new valve <em>(self-expanding valves may not need this)</em>'},
+          {type:'check',n:7,text:'<strong>Expect:</strong> SBP <span class="mono">~100</span> pre-pace; PP <span class="mono">&lt; 10</span> pre-balloon'},
+          {type:'check',n:8,text:'BP returns within <span class="mono">30–60 s</span> — <strong>do NOT give BP meds during this phase</strong>'},
+          {type:'check',n:9,text:'If BP doesn’t return (<span class="mono">6 s</span> zero change): ask surgeon to pause → request pacing → treat BP'},
+          {type:'check',n:10,text:'Post-deployment contrasts (<em>can require &gt; 200 cc</em>)'},
+          {type:'check',n:11,text:'TTE confirms position, no leak'},
+          {type:'check',n:12,text:'TAVR team holds groin pressure per protocol'},
+          {type:'check',n:13,text:'Give Protamine (surgeon-directed dose, RN provides)'},
+          {type:'check',n:14,text:'ACT recheck <span class="mono">5–7 min</span> after circulation'},
+          {type:'check',n:15,text:'EBL high? — check H&H with ACT'},
+          {type:'check',n:16,text:'<strong>Ensure MAP <span class="mono">70–75</span> mmHg</strong>'},
+        ]},
+      ],
+      postop:[
+        {type:'collapse',title:'Transport to ICU',icon:'beat',open:true,items:[
+          {type:'check',n:1,text:'O₂ via NRB or NC'},
+          {type:'check',n:2,text:'Reduce Precedex to <span class="mono">0.2 mcg/kg/hr</span> or stop for neuro assessment'},
+          {type:'check',n:3,text:'Neuro assessment with ICU RN — compare to baseline'},
+        ]},
+      ],
+      complications:[
+        {type:'collapse',title:'Recognized complications',icon:'warn',open:true,items:[
+          {type:'note',text:'<strong>Death</strong> · multifactorial; conversion to open salvage'},
+          {type:'note',text:'<strong>Stroke</strong> · embolic; neuro baseline essential'},
+          {type:'note',text:'<strong>Bleeding</strong> · vascular access; retroperitoneal'},
+          {type:'note',text:'<strong>Vascular complications</strong> · dissection, perforation, limb ischemia'},
+          {type:'note',text:'<strong>Annular rupture</strong> · rare, catastrophic'},
+          {type:'note',text:'<strong>Heart block</strong> · may need permanent pacer'},
+        ]},
+      ],
+    },
+  },
+  opcab:{
+    id:'opcab',title:'OPCAB',full:'Off-pump CABG',cardSub:'GETA · A-line · TEE',icon:'heart',colorClass:'c-opcab',version:'v2.0 · reviewed 04/2026',
+    alert:{type:'warn',text:'Maintain SBP for heart to tolerate hemodynamically-unfavorable position. Avoid tachycardia. Anesthesia must observe the surgical field.'},
+    chips:[{t:'ACT > 300',c:'warn'},{t:'Heparin 120–200 U/kg'},{t:'TEE'},{t:'Warm OR · normothermia'}],
+    phases:{
+      preop:[
+        {type:'collapse',title:'Anesthesia technique',icon:'syringe',open:true,items:[
+          {type:'note',text:'GETA'},
+          {type:'note',text:'Anesthesia needs to observe surgical field for excellent communication'},
+        ]},
+        {type:'collapse',title:'Induction',icon:'syringe',open:true,items:[
+          {type:'note',text:'Maintain SBP for heart to tolerate hemodynamic position'},
+          {type:'note',text:'<strong>Avoid tachycardia</strong>'},
+          {type:'note',text:'Alpha and inotropic agents important to maintain CO during manipulation'},
+          {type:'note',text:'IV vasodilators (NTG) reduce RV filling — useful when surgeon drops heart back down'},
+        ]},
+        {type:'collapse',title:'Maintenance & emergence',icon:'beat',items:[
+          {type:'note',text:'Narcotic with midazolam, volatile agent'},
+          {type:'note',text:'Transport to ICU intubated & ventilated'},
+        ]},
+        {type:'collapse',title:'Lines & fluids',icon:'needle',items:[
+          {type:'note',text:'PIV'},
+          {type:'note',text:'9F 2-lumen CVL'},
+          {type:'note',text:'<strong>Warm all fluids</strong>'},
+        ]},
+        {type:'collapse',title:'Monitoring',icon:'list',open:true,items:[
+          {type:'note',text:'Standard monitoring'},
+          {type:'note',text:'A-line'},
+          {type:'note',text:'FloTrac'},
+          {type:'note',text:'EKG (Lead II + V5 for ischemia)'},
+          {type:'note',text:'TEE'},
+          {type:'note',text:'PA catheter with mixed venous sat (occasional)'},
+        ]},
+      ],
+      or:[
+        {type:'collapse',title:'Incision & positioning',icon:'position',open:true,items:[
+          {type:'note',text:'Sternotomy (other incisions need DLT)'},
+          {type:'note',text:'Eyes & pressure points checked'},
+        ]},
+        {type:'collapse',title:'Operative sequence',icon:'list',open:true,items:[
+          {type:'check',n:1,text:'Review and discuss cardiac cath report with surgeon'},
+          {type:'check',n:2,text:'Discuss grafting sequence (proximal stenosis usually more important than distal)'},
+          {type:'check',n:3,text:'Pt arrives to <strong>warm OR</strong> to preserve normothermia'},
+          {type:'check',n:4,text:'Perfusionist available with dry setup'},
+          {type:'check',n:5,text:'Induction'},
+          {type:'check',n:6,text:'CVL insertion'},
+          {type:'check',n:7,text:'Warm IV fluid preload (<span class="mono">≥ 1000 cc</span>)'},
+          {type:'check',n:8,text:'Sternotomy — harvest of conduits (LIMA) as long as possible'},
+          {type:'check',n:9,text:'<strong>Heparin <span class="mono">120–200 U/kg</span></strong> (1/3 standard dose). Target ACT <span class="mono">&gt; 300</span>; check <span class="mono">q30 min</span>'},
+        ]},
+        {type:'callout',variant:'info',title:'Stenosis pearl',text:'High-grade stenosis (<span class="mono">90%</span>) = collateral flow. Lesser stenosis (<span class="mono">75–80%</span>) may cause severe dysfunction during surgery.'},
+        {type:'collapse',title:'Ischemia management',icon:'alert',open:true,items:[
+          {type:'note',text:'<strong>Detection:</strong> EKG Lead II/V5; PA catheter (PCWP elevation); TEE (new regional motion abnormality)'},
+          {type:'note',text:'<strong>Treatment:</strong> avoid tachycardia (β-blockers IV); epicardial pacing for ischemia-induced bradycardia'},
+        ]},
+        {type:'collapse',title:'Anastomosis sequence',icon:'list',open:true,items:[
+          {type:'note',text:'<strong>Anterior wall:</strong> LIMA → LAD (BP recovers faster head down + volume loading)'},
+          {type:'note',text:'<strong>Inferior wall:</strong> PDA (steep Trend), RCA (table flat)'},
+          {type:'note',text:'<strong>Lateral wall:</strong> OM (steep Trend, right rotation)'},
+          {type:'note',text:'Temp pacing wire may be inserted before occluding RCA proximal to bifurcation (A-V block risk)'},
+          {type:'note',text:'Regional hypothermia can be used during CA occlusion'},
+          {type:'note',text:'Intracoronary shunts can be used (endothelial damage risk)'},
+          {type:'note',text:'"Ischemic preconditioning" can decrease area of necrosis'},
+          {type:'note',text:'IABP for pts with reduced ventricular function needing multiple grafts'},
+        ]},
+        {type:'callout',variant:'warn',title:'Dr. Palmer pearl',text:'During OM anastomosis, pay close attention to apical suction.'},
+        {type:'callout',variant:'info',title:'Protamine reversal',text:'<strong>Half</strong> of calculated dose. Add small increments if ACT remains <span class="mono">&gt; 200</span>.'},
+      ],
+      complications:[
+        {type:'collapse',title:'Recognized complications',icon:'warn',open:true,items:[
+          {type:'note',text:'Infarction · ischemia · tamponade'},
+          {type:'note',text:'Dysrhythmias · cardiac failure'},
+          {type:'note',text:'Coagulopathy · hemorrhage'},
+        ]},
+      ],
+    },
+  },
+};
+const PROTOCOL_ORDER=['laac','laser','lung','tavr','opcab'];
+
+const DRUGS=[
+  {name:"Angiomax",generic:"Bivalirudin",class:"anti",conc:"250 mg / 250 mL NS",doses:[
+    ["On pump","Load 1 mg/kg · infusion 2.5 mg/kg/hr · ACT > 400"],
+    ["Off pump","Load 0.75 mg/kg · infusion 1.75 mg/kg/hr · ACT > 300"],
+    ["Re-bolus","0.1–0.3 mg/kg"],
+  ]},
+  {name:"Amicar",generic:"Aminocaproic acid",class:"fib",conc:"Antifibrinolytic",doses:[
+    ["Loading","5 g bolus"],
+    ["Infusion","5 g / 500 mL NS · 100 mL/hr"],
+  ]},
+  {name:"Amiodarone",generic:"Cordarone (use filter)",class:"vdilat",conc:"Antiarrhythmic",doses:[
+    ["Bolus","150 mg over first 10 min (15 mg/min)"],
+    ["Follow","360 mg over next 6 hr (1 mg/min)"],
+    ["Maintenance","540 mg over remaining 18 hr (0.5 mg/min)"],
+  ]},
+  {name:"Antithrombin III",generic:"Thrombate III",class:"anti",conc:"1 vial 500–700 IU",doses:[
+    ["Indication","Hereditary AT deficient pts (send pre-op AT3 levels)"],
+    ["Testing","Test aPTT and anti-Factor Xa activity for efficacy"],
+    ["Order","Two (2) vials"],
+  ]},
+  {name:"Balfaxar",generic:"4F-PCC",class:"anti",conc:"Weight & INR-based",doses:[
+    ["Indication","Urgent reversal of VKA anticoagulation in adults"],
+    ["Mechanism","Replenishes vit-K factors II, VII, IX, X, protein S & C"],
+    ["Safety","Thromboembolism, allergic reaction"],
+    ["Contraindication","HIT"],
+    ["INR 2–<4","25 U/kg · max 2500"],
+    ["INR 4–6","35 U/kg"],
+    ["Admin","Reconstitute in sterile water (blue tinge); infuse over 10 min"],
+  ]},
+  {name:"Cleviprex",generic:"Clevidipine",class:"vdilat",conc:"0.5 mg/mL",doses:[
+    ["Initial","1–2 mg/hr"],
+    ["Titration","Double dose every 90 sec"],
+    ["Note","Separate IV port is advised"],
+  ]},
+  {name:"DDAVP",generic:"Desmopressin",class:"fib",conc:"4 mcg/mL (1 mL vial)",doses:[
+    ["Dose","0.3 mcg/kg"],
+  ]},
+  {name:"Dexmedetomidine",generic:"Precedex · α2 agonist",class:"sed",conc:"4 mcg/mL · 400 mcg / 100 mL",doses:[
+    ["Pump rate","0.2–0.7 mcg/kg/hr"],
+    ["ICU preferred","0.4 mcg/kg/hr"],
+  ]},
+  {name:"Diltiazem",generic:"Cardizem",class:"vdilat",conc:"125 mg / 125 mL",doses:[
+    ["Pre-mix infusion","5–10 mg/hr"],
+  ]},
+  {name:"Dobutamine",generic:"β1 + some α1",class:"inotr",conc:"Standard prep",doses:[
+    ["Inotropic","2.5–10 mcg/kg/min"],
+    ["Vasoconstrictor","10–20 mcg/kg/min"],
+    ["Start","5 mcg/kg/min"],
+  ]},
+  {name:"Dopamine",generic:"D1 < β1 < α1",class:"inotr",conc:"500 mg / 250 mL",doses:[
+    ["Renal","< 5 mcg/kg/min"],
+    ["Inotropic","5–10 mcg/kg/min"],
+    ["Vasoconstrictor","10–20 mcg/kg/min"],
+    ["Start","3 mcg/kg/min"],
+  ]},
+  {name:"Epinephrine",generic:"Adrenalin · α1 + β",class:"vaso",conc:"4 mg / 250 mL = 16 mcg/mL · renal: 8 or 16 mg / 250 mL",doses:[
+    ["Beta","0.01–0.03 mcg/kg/min"],
+    ["β > α","0.03–0.15 mcg/kg/min"],
+    ["α + β","0.15–0.5 mcg/kg/min"],
+  ]},
+  {name:"Esmolol",generic:"Brevibloc",class:"vdilat",conc:"10 mg/mL (250 mg / 250 mL)",doses:[
+    ["Bolus","80 mg or 1 mg/kg over 30 sec"],
+    ["Rate","0.05–0.2 mg/kg/min"],
+  ]},
+  {name:"Heparin",generic:"Anticoagulant",class:"anti",conc:"1000 U/mL · 60 mL syringe",doses:[
+    ["Full CPB","300–400 U/kg · target ACT > 400"],
+    ["OPCAB","120–200 U/kg · target ACT > 300"],
+    ["TAVR","~100 U/kg · ACT ~ 300"],
+    ["Recheck","q30 min on bypass"],
+  ]},
+  {name:"Lidocaine",generic:"Antiarrhythmic",class:"vdilat",conc:"2 mg / 250 mL",doses:[
+    ["Rate","1–4 mg/min"],
+  ]},
+  {name:"Milrinone",generic:"Primacor · PDE-3 inhibitor",class:"inotr",conc:"Standard prep",doses:[
+    ["Optional bolus","50 mcg/kg"],
+    ["Infusion","0.23–0.75 mcg/kg/min"],
+  ]},
+  {name:"Nicardipine",generic:"Cardene",class:"vdilat",conc:"25 or 50 mg / 250 mL · 0.1 mg/mL",doses:[
+    ["Properties","Selective arterial dilator; preserves cerebral + coronary perfusion"],
+    ["Rate","2.5–15 mg/hr"],
+  ]},
+  {name:"Nitroprusside",generic:"Nipride · NO donor",class:"vdilat",conc:"a > v smooth muscle relaxant",doses:[
+    ["Rate","0.1–10 mcg/kg/min"],
+  ]},
+  {name:"Norepinephrine",generic:"Levophed · α1 >> β1",class:"vaso",conc:"4 mg / 250 mL = 16 mcg/mL",doses:[
+    ["Vasoconstrictor","0.01–0.5 mcg/kg/min"],
+  ]},
+  {name:"NTG",generic:"Nitroglycerin",class:"vdilat",conc:"200 mcg/mL · syringe 20 mcg/mL",doses:[
+    ["Properties","Veno/vasodilator; coronary vasodilator"],
+    ["Infusion","0.1–7.0 mcg/kg/min"],
+  ]},
+  {name:"Phenylephrine",generic:"Neosynephrine · α1 agonist",class:"vaso",conc:"50 mg / 250 mL = 200 mcg/mL · syringe 100 mcg/mL",doses:[
+    ["Infusion","0.5–6 mcg/kg/min"],
+    ["Push","50–100 mcg"],
+  ]},
+  {name:"Protamine",generic:"Heparin antagonist",class:"anti",conc:"100 mg / 250 NS · run 50 mL/hr (Accola)",doses:[
+    ["Full reversal","1 mg per 100 U heparin given"],
+    ["OPCAB","Half of calculated dose; add small increments if ACT > 200"],
+    ["TAVR","Surgeon-directed; ACT recheck 5–7 min after"],
+    ["Caution","Test dose recommended; risk of pulmonary HTN, hypotension, anaphylaxis"],
+  ]},
+  {name:"TXA",generic:"Tranexamic acid",class:"fib",conc:"1000 mg / 10 mL",doses:[
+    ["Pre-bypass","10 mg/kg over 10–15 min"],
+    ["CPB pump prime","250 mg (by perfusionist)"],
+    ["Continuous","1 mg/kg/hr via pump (MANDATORY) — continue to ICU"],
+  ]},
+  {name:"Vasopressin",generic:"Pitressin · ADH",class:"vaso",conc:"40 or 60 U / 100 mL NS",doses:[
+    ["Infusion","0.01–0.07 U/min"],
+  ]},
+];
+
+const SURGEONS=[
+  {name:"Accola",cvl:"9F2L & Slick",swan:"—",map:"70",drips:"Milr/Epi (brady, PHT) · Milr/Levo · Milr/Epi/Vaso for REDO",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"Yes — 100 mg / 250 NS, run 50 mL/hr",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"Military style, crisp & clear · communicate ALL concerns during Surgical Pause",dislikes:"Always clarify drug before pushing · DO NOT place blue goggles on patient",misc:"0715 start on 1st case · If pt has previous pacer, turn OFF during surgery and run at 85 post · Check K before coming off CPB · All pts travel to CV-ICU with attached pacer"},
+  {name:"Ali",cvl:"Swan",swan:"Almost always",map:"70",drips:"Milr/Epi",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"NO excessive talking",dislikes:"Pay attention!",misc:"Pacemaker always travels with pt"},
+  {name:"Bishop",cvl:"Swan",swan:"Almost always",map:"70",drips:"Milr/Epi/Vaso/Levo",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"NO excessive talking",dislikes:"Pay attention!",misc:"Pacemaker always travels with pt"},
+  {name:"Bogar",cvl:"9F2L & Slick",swan:"Almost always",map:"70",drips:"Milr/Epi/Levo/Vaso",position:"Keep bed levelled",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"—",dislikes:"—",misc:"TEE for retrograde cannula insertion"},
+  {name:"Boyer",cvl:"9F2L & Slick",swan:"< 30% EF",map:"70",drips:"Milr/Epi · Milr/Levo",position:"Legs elevated on mat for CABG",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"Ask if steroids needed for REDO",comms:"—",dislikes:"—",misc:"Pacer to CV-ICU · CEA: cerebral ox for bilateral disease"},
+  {name:"Davis",cvl:"9F2L & Slick",swan:"—",map:"—",drips:"—",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"—",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"—",dislikes:"—",misc:"—"},
+  {name:"Guel",cvl:"9F2L & Slick",swan:"EF < 30 · pulm HTN · R-sided failure",map:"75",drips:"Milr · Levo · Cardene for HTN",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"—",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"—",dislikes:"—",misc:"Mediastinoscopy: A-line on right, pulse-ox on left"},
+  {name:"Karas",cvl:"9F2L & Slick",swan:"EF < 30 · pulm HTN · R-sided failure",map:"75",drips:"Milr · Levo · Cardene or Cleviprex for HTN",position:"Lungs — beanbag backwards",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"Yes for heavy pt or long CPB",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"—",dislikes:"—",misc:"Mediastinoscopy: A-line on right, pulse-ox on left"},
+  {name:"Khouzam",cvl:"9F2L & Slick",swan:"Very sick pt only",map:"Keep SBP ≈ 50 after separation while surgeon takes aortic cannula and oversews",drips:"Dobutamine · Milr/Epi",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"—",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"—",dislikes:"—",misc:"Always inform about PFO during Surgical Pause"},
+  {name:"Lee",cvl:"9F2L & Slick",swan:"—",map:"70",drips:"Milr/Epi (brady, PHT) · Milr/Levo · Milr/Epi/Vaso for REDO",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"Yes — 100 mg / 250 NS, run 50 mL/hr",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"Military style, crisp & clear · communicate ALL concerns during Surgical Pause",dislikes:"Always clarify drug before pushing · DO NOT place blue goggles on patient",misc:"0715 start on 1st case · If pt has previous pacer, turn OFF during surgery and run at 85 post · Check K before coming off CPB · All pts travel to CV-ICU with attached pacer"},
+  {name:"Loumiotis",cvl:"9F2L & Slick",swan:"—",map:"70",drips:"Milr/Epi (brady, PHT) · Milr/Levo · Milr/Epi/Vaso for REDO",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"Yes — 100 mg / 250 NS, run 50 mL/hr",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"Military style, crisp & clear · communicate ALL concerns during Surgical Pause",dislikes:"Always clarify drug before pushing · DO NOT place blue goggles on patient",misc:"0715 start on 1st case · If pt has previous pacer, turn OFF during surgery and run at 85 post · Check K before coming off CPB · All pts travel to CV-ICU with attached pacer"},
+  {name:"Palmer",cvl:"9F2L & Slick",swan:"Low EF (< 30) & sick pt",map:"70",drips:"Milr/Epi",position:"Epicardial: bumped 40° left side up, arm tucked underneath",labs:"≥ 2 sets post-bypass",blood:"Pref none — for REDO order ahead",protamine:"—",vanco:"Yes",beta:"For CABG",presurg:"125 mg Solu-Medrol + 20 mg Pepcid for all hearts",comms:"NO excessive talking",dislikes:"Pay attention!",misc:"Watch for chest tube output during epicardial lead · During OPCAB OM anastomosis, pay close attention to apical suction"},
+  {name:"Rhinewalt",cvl:"Swan",swan:"Almost always",map:"70",drips:"Milr/Epi/Vaso/Levo",position:"—",labs:"≥ 2 sets post-bypass",blood:"LEE — 4 U RBC on ice in OR",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"NO excessive talking",dislikes:"Pay attention!",misc:"Pacemaker always travels with pt"},
+  {name:"Suarez",cvl:"9F2L & Slick",swan:"Sick pt",map:"70",drips:"Milr/Epi/Levo/Vaso",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"Yes for heavy pt or long CPB",vanco:"Yes",beta:"For CABG",presurg:"Ask if steroids for REDO",comms:"—",dislikes:"In stressful situations expect limited comms — monitor surgical field to decide next step",misc:"Pacemaker always travels with pt"},
+  {name:"Zeeshan",cvl:"Swan",swan:"Almost always",map:"70",drips:"Milr/Epi/Vaso/Levo",position:"—",labs:"≥ 2 sets post-bypass",blood:"—",protamine:"No",vanco:"Yes",beta:"For CABG",presurg:"—",comms:"NO excessive talking",dislikes:"Pay attention!",misc:"Pacemaker always travels with pt"},
+];
+
+const EMERGENCIES=[
+  {id:'chest-open',title:'Emergency chest opening',sub:'CPB · re-explore',icon:'fire'},
+  {id:'protamine',title:'Protamine reaction',sub:'Type I / II / III',icon:'alert'},
+  {id:'vt-vf',title:'VT / VF',sub:'ACLS · pacing',icon:'bolt'},
+  {id:'hemorrhage',title:'Massive hemorrhage',sub:'MTP · TEG',icon:'drop'},
+  {id:'tamponade',title:'Tamponade',sub:'TEE confirm',icon:'beat'},
+  {id:'bypass-init',title:'Bypass init checklist',sub:'10-item R→L sweep',icon:'list'},
+];
+
+/* ========== STATE & STORAGE ========== */
+const STATE={route:'home',phase:'preop',currentProtocol:null,currentDrug:null,currentSurgeon:null,query:'',procIdx:null};
+const KEY={recents:'anescodex.recents',saved:'anescodex.saved',checks:'anescodex.checks',setup:'anescodex.setup',bypass:'anescodex.bypass'};
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+let RECENTS=load(KEY.recents,[]),SAVED=load(KEY.saved,[]),CHECKS=load(KEY.checks,{}),SETUP_DONE=load(KEY.setup,{}),BYPASS_DONE=load(KEY.bypass,{});
+
+function pushRecent(type,id,label){
+  RECENTS=[{type,id,label},...RECENTS.filter(r=>!(r.type===type&&r.id===id))].slice(0,5);
+  save(KEY.recents,RECENTS);
+}
+function toggleSaved(type,id){
+  const k=type+':'+id;
+  if(SAVED.includes(k))SAVED=SAVED.filter(x=>x!==k);
+  else SAVED=[k,...SAVED];
+  save(KEY.saved,SAVED);
+}
+function toggleCheck(k){CHECKS[k]=!CHECKS[k];save(KEY.checks,CHECKS)}
+function toggleSetup(k){SETUP_DONE[k]=!SETUP_DONE[k];save(KEY.setup,SETUP_DONE)}
+function toggleBypass(k){BYPASS_DONE[k]=!BYPASS_DONE[k];save(KEY.bypass,BYPASS_DONE)}
+
+/* ========== HELPERS ========== */
+const root=document.getElementById('view-root');
+const tabbar=document.getElementById('tabbar');
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c])}
+function initials(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+function setActiveTab(route){tabbar.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.route===route))}
+
+/* ========== HOME ========== */
+function renderHome(){
+  const recentsHtml=RECENTS.length?RECENTS.map(r=>{
+    const route=r.type==='protocol'?`protocol/${r.id}`:r.type==='drug'?`drug/${r.id}`:r.type==='surgeon'?`surgeon/${r.id}`:r.type==='proc'?`procedure/${r.id}`:'home';
+    return `<button class="recent-pill" data-route="${route}">${ICON.clock}<span>${esc(r.label)}</span></button>`;
+  }).join(''):`<span class="recent-empty">Tap any item — it appears here for one-tap return</span>`;
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="home-hdr">
+        <div class="home-hdr-top">
+          <div class="brand"><span class="dot"></span>anes<span class="ax">codex</span></div>
+          <div class="user-chip">HK · CRNA</div>
+        </div>
+        <p class="sub">CV-OR codex · v3.3</p>
+      </div>
+      <button class="search-trigger" data-route="search">
+        ${ICON.search}<span>Search drugs, surgeons, protocols…</span><span class="kbd">⌘K</span>
+      </button>
+      <button class="em-tile" data-route="emergency">
+        <div class="em-left">
+          <div class="em-icon">${ICON.bolt}</div>
+          <div>
+            <div class="em-title">Emergency reference</div>
+            <div class="em-sub">Bypass · protamine · chest open · VF</div>
+          </div>
+        </div>
+        <span class="em-arrow">${ICON.chevR}</span>
+      </button>
+
+      <div class="section-label"><span>Phase of case</span></div>
+      <div class="phase-shortcuts">
+        <button class="phase-chip" data-route="setup"><div class="ic">${ICON.flask}</div><div class="lbl"><strong>Setup</strong><small>pre-case prep</small></div></button>
+        <button class="phase-chip" data-route="procedure/5"><div class="ic">${ICON.scan}</div><div class="lbl"><strong>Surgical pause</strong><small>verification</small></div></button>
+        <button class="phase-chip" data-route="procedure/6"><div class="ic">${ICON.clock}</div><div class="lbl"><strong>Pre-bypass</strong><small>ACT call-outs</small></div></button>
+        <button class="phase-chip" data-route="bypass"><div class="ic">${ICON.list}</div><div class="lbl"><strong>On bypass</strong><small>R→L sweep</small></div></button>
+        <button class="phase-chip" data-route="procedure/8"><div class="ic">${ICON.drop}</div><div class="lbl"><strong>Post bypass</strong><small>protamine + labs</small></div></button>
+      </div>
+
+      <div class="section-label"><span>Recent</span></div>
+      <div class="recent">${recentsHtml}</div>
+
+      <div class="section-label"><span>Quick access</span><span class="count">8 areas</span></div>
+      <div class="grid">
+        <button class="card c-drugs" data-route="drugs"><div class="card-icon">${ICON.pill}</div><div><div class="card-title">Drips & drugs</div><div class="card-meta">${DRUGS.length} medications</div></div></button>
+        <button class="card c-surgeons" data-route="surgeons"><div class="card-icon">${ICON.users}</div><div><div class="card-title">Surgeon prefs</div><div class="card-meta">${SURGEONS.length} surgeons</div></div></button>
+        <button class="card c-protocols" data-route="cases"><div class="card-icon">${ICON.heart}</div><div><div class="card-title">Surgical protocols</div><div class="card-meta">${PROTOCOL_ORDER.length} cases · tap to open</div></div></button>
+        <button class="card c-setup" data-route="setup"><div class="card-icon">${ICON.flask}</div><div><div class="card-title">Setup checklist</div><div class="card-meta">Mandatory protocol</div></div></button>
+        <button class="card c-procedures" data-route="procedures"><div class="card-icon">${ICON.list}</div><div><div class="card-title">Procedures</div><div class="card-meta">10-step workflow</div></div></button>
+        <button class="card c-bypass" data-route="bypass"><div class="card-icon">${ICON.list}</div><div><div class="card-title">Bypass init</div><div class="card-meta">10-item checklist</div></div></button>
+        <button class="card c-srna" data-route="srna"><div class="card-icon">${ICON.book}</div><div><div class="card-title">SRNA info</div><div class="card-meta">Students · contacts</div></div></button>
+        <button class="card c-account" data-route="about"><div class="card-icon">${ICON.cog}</div><div><div class="card-title">About</div><div class="card-meta">Version · disclaimer</div></div></button>
+      </div>
+
+      <div class="version-foot"><span>updated 22 may 2026</span><span>© H. Kleinova DNP CRNA</span></div>
+    </div>`;
+  setActiveTab('home');
+}
+
+/* ========== DRUGS ========== */
+function renderDrugList(){
+  const q=(STATE.query||'').trim().toLowerCase();
+  const sorted=[...DRUGS].sort((a,b)=>a.name.localeCompare(b.name));
+  const filtered=q?sorted.filter(d=>(d.name+' '+d.generic+' '+d.conc).toLowerCase().includes(q)):sorted;
+  const groups={};
+  filtered.forEach(d=>{const L=d.name[0].toUpperCase();(groups[L]=groups[L]||[]).push(d)});
+  const body=Object.keys(groups).sort().map(L=>{
+    return `<div class="alpha-group">
+      <div class="alpha-letter">${L}</div>
+      ${groups[L].map(d=>{
+        const id=d.name.toLowerCase().replace(/\W+/g,'-');
+        return `<button class="alpha-item" data-route="drug/${id}" style="width:100%">
+          <div class="alpha-tag" style="background:var(--${d.class||'sed'})"></div>
+          <div class="alpha-body">
+            <div class="alpha-name">${esc(d.name)}</div>
+            <div class="alpha-sub">${esc(d.generic)}</div>
+          </div>
+          <span class="alpha-chev">${ICON.chevR}</span>
+        </button>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="list-search">
+        <div class="list-input ${STATE.query?'has-value':''}">${ICON.search}
+          <input id="search-input" type="search" placeholder="Search drug, generic, dose…" autocomplete="off" autocapitalize="none" autocorrect="off" value="${esc(STATE.query)}">
+          <span class="clear" data-action="clear">${ICON.x}</span>
+        </div>
+      </div>
+      ${filtered.length?body:`<div class="empty">${ICON.search}<div style="margin-top:8px">No drug matches "${esc(q)}"</div></div>`}
+      <div class="version-foot"><span>${DRUGS.length} drugs · always verify pharmacy</span><span>—</span></div>
+    </div>`;
+  setActiveTab('drugs');
+  const inp=document.getElementById('search-input');
+  if(inp){inp.addEventListener('input',e=>{STATE.query=e.target.value;renderDrugList()})}
+}
+function renderDrugDetail(id){
+  const d=DRUGS.find(x=>x.name.toLowerCase().replace(/\W+/g,'-')===id);
+  if(!d){STATE.route='drugs';return renderDrugList()}
+  pushRecent('drug',id,d.name);
+  const rows=d.doses.map(r=>`<div class="drug-dose-row"><div class="label">${esc(r[0])}</div><div class="value">${esc(r[1])}</div></div>`).join('');
+  const bookmarked=SAVED.includes('drug:'+id);
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="drugs">${ICON.back}</button>
+        <div class="nav-title"><strong>${esc(d.name)}</strong><small>drug reference</small></div>
+        <button class="nav-action ${bookmarked?'on':''}" data-action="bookmark" data-type="drug" data-id="${id}">${ICON.bookmark}</button>
+      </div>
+      <div class="drug-hero">
+        <h1>${esc(d.name)}</h1>
+        <div class="generic">${esc(d.generic)}</div>
+        <div class="conc">${esc(d.conc)}</div>
+      </div>
+      <div class="section-label" style="margin-top:14px"><span>Dosing</span><span class="count">${d.doses.length} rows</span></div>
+      <div class="drug-dose-table">${rows}</div>
+      <div class="version-foot"><span>confirm with pharmacy</span><span>—</span></div>
+    </div>`;
+  setActiveTab('drugs');
+}
+
+/* ========== SURGEONS ========== */
+function renderSurgeonList(){
+  const q=(STATE.query||'').trim().toLowerCase();
+  const filtered=SURGEONS.filter(s=>!q||(s.name+' '+s.drips+' '+s.misc+' '+s.comms).toLowerCase().includes(q));
+  const body=filtered.map(s=>{
+    const id=s.name.toLowerCase();
+    return `<button class="alpha-item" data-route="surgeon/${id}" style="width:100%">
+      <div class="surgeon-avatar" style="width:42px;height:42px;font-size:13px">${initials(s.name)}</div>
+      <div class="alpha-body">
+        <div class="alpha-name">Dr. ${esc(s.name)}</div>
+        <div class="alpha-sub">${esc(s.cvl)} · MAP ${esc(s.map)}</div>
+      </div>
+      <span class="alpha-chev">${ICON.chevR}</span>
+    </button>`;
+  }).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="list-search">
+        <div class="list-input ${STATE.query?'has-value':''}">${ICON.search}
+          <input id="search-input" type="search" placeholder="Search surgeon, drip, pref…" autocomplete="off" value="${esc(STATE.query)}">
+          <span class="clear" data-action="clear">${ICON.x}</span>
+        </div>
+      </div>
+      <div class="alpha-list">${filtered.length?body:`<div class="empty">${ICON.users}<div style="margin-top:8px">No surgeon matches "${esc(q)}"</div></div>`}</div>
+      <div class="version-foot"><span>${SURGEONS.length} surgeons · v3.3</span><span>—</span></div>
+    </div>`;
+  setActiveTab('surgeons');
+  const inp=document.getElementById('search-input');
+  if(inp)inp.addEventListener('input',e=>{STATE.query=e.target.value;renderSurgeonList()});
+}
+function renderSurgeonDetail(id){
+  const s=SURGEONS.find(x=>x.name.toLowerCase()===id);
+  if(!s){STATE.route='surgeons';return renderSurgeonList()}
+  pushRecent('surgeon',id,'Dr. '+s.name);
+  const bookmarked=SAVED.includes('surgeon:'+id);
+  const flagComms=s.comms.toLowerCase().includes('no excessive')||s.comms.toLowerCase().includes('military')||s.dislikes.toLowerCase().includes('pay attention');
+  const rows=[
+    ['Comms',s.comms,flagComms],
+    ['Dislikes',s.dislikes,s.dislikes.toLowerCase().includes('pay attention')],
+    ['CVL',s.cvl],
+    ['Swan-Ganz',s.swan],
+    ['MAP target',s.map,true],
+    ['Drips',s.drips,true],
+    ['Positioning',s.position],
+    ['Labs',s.labs],
+    ['Blood',s.blood],
+    ['Protamine',s.protamine],
+    ['Vanco',s.vanco],
+    ['β-blocker',s.beta],
+    ['Pre-surg drugs',s.presurg],
+    ['Misc',s.misc],
+  ].filter(r=>r[1]&&r[1]!=='—'&&r[1]!=='-');
+  const rowHtml=rows.map(r=>`<div class="surg-row"><div class="lbl">${esc(r[0])}</div><div class="val${r[2]?' mono':''}" style="${r[2]?'color:var(--warn-2)':''}">${esc(r[1])}</div></div>`).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="surgeons">${ICON.back}</button>
+        <div class="nav-title"><strong>Dr. ${esc(s.name)}</strong><small>surgeon preferences</small></div>
+        <button class="nav-action ${bookmarked?'on':''}" data-action="bookmark" data-type="surgeon" data-id="${id}">${ICON.bookmark}</button>
+      </div>
+      <div class="surgeon-hero">
+        <div class="surgeon-avatar">${initials(s.name)}</div>
+        <div>
+          <h1>Dr. ${esc(s.name)}</h1>
+          <div class="role">cardiac surgeon · ${rows.length} prefs</div>
+        </div>
+      </div>
+      ${flagComms?`<div class="alert-strip"><span>${ICON.warn}</span><div class="alert-text"><strong>Comms style flagged:</strong> ${esc(s.comms)}</div></div>`:''}
+      <div class="surgeon-grid">${rowHtml}</div>
+      <div class="version-foot"><span>v3.3 · institutional</span><span>—</span></div>
+    </div>`;
+  setActiveTab('surgeons');
+}
+
+/* ========== PROTOCOLS (CASES) ========== */
+function renderCasesList(){
+  const items=PROTOCOL_ORDER.map(id=>PROTOCOLS[id]);
+  const grid=items.map(p=>`
+    <button class="card ${p.colorClass}" data-route="protocol/${p.id}">
+      <div class="card-icon">${ICON[p.icon]}</div>
+      <div><div class="card-title">${esc(p.title)}</div><div class="card-meta">${esc(p.cardSub)}</div></div>
+    </button>`).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar" style="background:var(--bg);backdrop-filter:none"><div class="nav-title" style="margin-left:6px"><strong>Cases</strong><small>${items.length} protocols · tap to open</small></div></div>
+      <div class="section-label"><span>Surgical protocols</span><span class="count">${items.length} cases</span></div>
+      <div class="grid">${grid}</div>
+      <div class="section-label" style="margin-top:6px"><span>Master workflow</span></div>
+      <div class="grid">
+        <button class="card c-procedures" data-route="procedures" style="grid-column:span 2;min-height:auto;flex-direction:row;align-items:center;gap:14px">
+          <div class="card-icon">${ICON.list}</div>
+          <div style="flex:1"><div class="card-title" style="margin:0">10-step procedure</div><div class="card-meta">pre-op → charting</div></div>
+          <span style="color:var(--text-3)">${ICON.chevR}</span>
+        </button>
+      </div>
+      <div class="version-foot"><span>v3.3</span><span>—</span></div>
+    </div>`;
+  setActiveTab('cases');
+}
+function renderProtocol(id){
+  const p=PROTOCOLS[id];
+  if(!p){STATE.route='cases';return renderCasesList()}
+  pushRecent('protocol',id,p.title);
+  const phaseKeys=['preop','or','postop','complications'].filter(k=>p.phases[k]&&p.phases[k].length);
+  const labels={preop:'Pre-op',or:'OR',postop:'Post-op',complications:'Compl.'};
+  if(!phaseKeys.includes(STATE.phase))STATE.phase=phaseKeys[0];
+  const blocks=p.phases[STATE.phase]||[];
+  const chips=(p.chips||[]).map(c=>`<span class="chip ${c.c||''}">${esc(c.t)}</span>`).join('');
+  const tabsHtml=phaseKeys.map(k=>`<button class="phase-tab ${STATE.phase===k?'on':''}" data-phase="${k}">${labels[k]}</button>`).join('');
+  const blocksHtml=blocks.length?blocks.map((b,i)=>renderBlock(b,id+'-'+STATE.phase+'-'+i)).join(''):
+    `<div class="empty">${ICON.search}<div style="margin-top:8px">No content for this phase</div></div>`;
+  const alert=p.alert?`<div class="alert-strip ${p.alert.type==='crit'?'crit':p.alert.type==='info'?'info':''}"><span>${ICON.warn}</span><div class="alert-text">${p.alert.text}</div></div>`:'';
+  const bookmarked=SAVED.includes('protocol:'+id);
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="cases">${ICON.back}</button>
+        <div class="nav-title"><strong>${esc(p.full||p.title)}</strong><small>${esc(p.version)}</small></div>
+        <button class="nav-action ${bookmarked?'on':''}" data-action="bookmark" data-type="protocol" data-id="${id}">${ICON.bookmark}</button>
+      </div>
+      ${alert}
+      ${phaseKeys.length>1?`<div class="phase-tabs">${tabsHtml}</div>`:''}
+      ${chips?`<div class="chips">${chips}</div>`:''}
+      ${blocksHtml}
+      <div class="version-foot"><span>${esc(p.version)}</span><span>© H. Kleinova</span></div>
+    </div>`;
+  setActiveTab('cases');
+}
+function renderBlock(b,key){
+  if(b.type==='callout'){
+    return `<div class="callout ${b.variant||''}">
+      <div class="callout-title">${ICON.alert}<span>${esc(b.title)}</span></div>
+      <div class="callout-text">${b.text}</div>
+    </div>`;
+  }
+  if(b.type==='spec'){
+    const rows=b.rows.map(r=>`<div class="spec-row"><div class="key">${esc(r[0])}</div><div class="val">${r[1]}</div></div>`).join('');
+    return `<div class="spec-table">${rows}</div>`;
+  }
+  if(b.type==='collapse'){
+    const isOpen=b.open!==false;
+    let body='';
+    if(b.drugs){
+      body=b.drugs.map(d=>`
+        <div class="check-item" style="border-top:0.5px solid var(--border)">
+          <div style="width:4px;height:34px;border-radius:2px;background:var(--${d.tag});flex-shrink:0;margin-top:1px"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600">${esc(d.name)}</div>
+            <div style="font-size:11px;color:var(--text-3);font-family:var(--mono);margin-top:2px">${esc(d.sub)}</div>
+          </div>
+          <span style="font-family:var(--mono);font-size:11.5px;color:var(--accent-2);background:var(--accent-bg);padding:5px 9px;border-radius:7px;border:0.5px solid var(--accent-border);flex-shrink:0;font-weight:500">${esc(d.dose)}</span>
+        </div>`).join('');
+    } else if(b.items){
+      body=`<div class="checklist">${b.items.map((it,i)=>{
+        const k=key+'-'+i;
+        if(it.type==='check'){
+          const done=CHECKS[k];
+          return `<div class="check-item ${done?'done':''}" data-check="${k}">
+            <div class="check-box"></div>
+            <div class="check-text">${it.text}</div>
+          </div>`;
+        }
+        return `<div class="check-item"><div class="check-num">·</div><div class="check-text">${it.text}</div></div>`;
+      }).join('')}</div>`;
+    }
+    const count=b.items?b.items.length:(b.drugs?b.drugs.length:'');
+    const unit=b.drugs?'drugs':'items';
+    return `<div class="collapse ${isOpen?'open':''}" data-collapse="${key}">
+      <div class="collapse-hdr" data-toggle="${key}">
+        <div class="left">${b.icon?'<span class="lead">'+ICON[b.icon]+'</span>':''}<span>${esc(b.title)}</span></div>
+        <div style="display:flex;align-items:center">
+          ${count?`<span class="count">${count} ${unit}</span>`:''}
+          <span class="chevron">${ICON.chevD}</span>
+        </div>
+      </div>
+      <div class="collapse-body">${body}</div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ========== PROCEDURES (10-step master workflow) ========== */
+function renderProcedureList(){
+  const items=PROCEDURE_STEPS.map(s=>`
+    <button class="step-card" data-route="procedure/${s.n}">
+      <div class="step-card-row">
+        <div class="step-num">${s.n.toString().padStart(2,'0')}</div>
+        <div class="step-info"><strong>${esc(s.title)}</strong><small>${esc(s.sub)}</small></div>
+        <span class="step-chev">${ICON.chevR}</span>
+      </div>
+    </button>`).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="more">${ICON.back}</button>
+        <div class="nav-title"><strong>Procedures</strong><small>10-step master workflow</small></div>
+      </div>
+      <div class="alert-strip info"><span>${ICON.warn}</span><div class="alert-text">From pre-op board check through final charting. Tap any step to open detail.</div></div>
+      <div style="padding:0 0 14px">${items}</div>
+      <div class="version-foot"><span>v3.3</span><span>—</span></div>
+    </div>`;
+  setActiveTab('cases');
+}
+function renderProcedureDetail(n){
+  const step=PROCEDURE_STEPS.find(s=>s.n===+n);
+  if(!step){STATE.route='procedures';return renderProcedureList()}
+  pushRecent('proc',step.n,'Step '+step.n+' · '+step.title);
+  const body=step.content.map((b,i)=>{
+    if(b.type==='note')return `<div class="callout info" style="border-color:var(--border);background:var(--surface);"><div class="callout-text" style="color:var(--text-2)">${b.text}</div></div>`;
+    if(b.type==='callout')return `<div class="callout ${b.variant||''}"><div class="callout-title">${ICON.alert}<span>${esc(b.title)}</span></div><div class="callout-text">${b.text}</div></div>`;
+    if(b.type==='subhead')return `<div class="section-label" style="margin-top:8px"><span>${esc(b.text)}</span></div>`;
+    if(b.type==='cta')return `<button class="card c-bypass" data-route="${b.route}" style="margin:0 22px 14px;width:calc(100% - 44px);flex-direction:row;align-items:center;gap:14px;min-height:auto;justify-content:flex-start">
+      <div class="card-icon">${ICON.list}</div>
+      <div style="flex:1;text-align:left"><div class="card-title" style="margin:0">${esc(b.text)}</div><div class="card-meta">10-item · persists locally</div></div>
+      <span style="color:var(--text-3)">${ICON.chevR}</span>
+    </button>`;
+    if(b.type==='list'){
+      const k='proc-'+step.n+'-'+i;
+      return `<div class="collapse open" data-collapse="${k}">
+        <div class="collapse-body" style="padding:14px 15px">
+          <div class="checklist">${b.items.map((t,j)=>{
+            const ck=k+'-'+j;const done=CHECKS[ck];
+            return `<div class="check-item ${done?'done':''}" data-check="${ck}"><div class="check-box"></div><div class="check-text">${t}</div></div>`;
+          }).join('')}</div>
+        </div>
+      </div>`;
+    }
+    return '';
+  }).join('');
+  const nextN=step.n+1<=PROCEDURE_STEPS.length?step.n+1:null;
+  const prevN=step.n-1>=1?step.n-1:null;
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="procedures">${ICON.back}</button>
+        <div class="nav-title"><strong>${step.n.toString().padStart(2,'0')} · ${esc(step.title)}</strong><small>${esc(step.sub)}</small></div>
+      </div>
+      ${body}
+      <div style="display:flex;gap:10px;padding:0 22px 20px">
+        ${prevN?`<button class="card" style="flex:1;min-height:auto;padding:10px 12px;flex-direction:row;align-items:center;gap:8px" data-route="procedure/${prevN}"><span style="color:var(--text-3);font-size:18px">${ICON.back}</span><div><div style="font-size:10px;color:var(--text-3);font-family:var(--mono)">PREV</div><div style="font-size:12.5px;font-weight:600">Step ${prevN}</div></div></button>`:'<div style="flex:1"></div>'}
+        ${nextN?`<button class="card" style="flex:1;min-height:auto;padding:10px 12px;flex-direction:row;align-items:center;gap:8px;justify-content:flex-end" data-route="procedure/${nextN}"><div style="text-align:right"><div style="font-size:10px;color:var(--text-3);font-family:var(--mono)">NEXT</div><div style="font-size:12.5px;font-weight:600">Step ${nextN}</div></div><span style="color:var(--text-3);font-size:18px">${ICON.chevR}</span></button>`:'<div style="flex:1"></div>'}
+      </div>
+    </div>`;
+  setActiveTab('cases');
+}
+
+/* ========== SETUP CHECKLIST ========== */
+function renderSetup(){
+  const groups=[
+    {key:'syringes',label:'Syringes & medications',icon:'syringe',items:SETUP_ITEMS.syringes,open:true},
+    {key:'ivbags',label:'IV bags & drips',icon:'drop',items:SETUP_ITEMS.ivbags},
+    {key:'airway',label:'Airway setup',icon:'lungs',items:SETUP_ITEMS.airway},
+    {key:'misc',label:'Miscellaneous',icon:'list',items:SETUP_ITEMS.misc},
+    {key:'lowef',label:'Low EF add-ons (EF < 25%)',icon:'warn',items:SETUP_ITEMS.lowef},
+  ];
+  const total=groups.reduce((a,g)=>a+g.items.length,0);
+  const done=Object.values(SETUP_DONE).filter(Boolean).length;
+  const pct=total?Math.round((done/total)*100):0;
+  const sections=groups.map(g=>{
+    const groupDone=g.items.filter((_,i)=>SETUP_DONE[g.key+'-'+i]).length;
+    const itemsHtml=g.items.map((it,i)=>{
+      const k=g.key+'-'+i;
+      const isDone=SETUP_DONE[k];
+      return `<div class="check-item ${isDone?'done':''}" data-setup="${k}"><div class="check-box"></div><div class="check-text">${it}</div></div>`;
+    }).join('');
+    return `<div class="collapse ${g.open?'open':''}" data-collapse="setup-${g.key}">
+      <div class="collapse-hdr" data-toggle="setup-${g.key}">
+        <div class="left"><span class="lead">${ICON[g.icon]}</span><span>${esc(g.label)}</span></div>
+        <div style="display:flex;align-items:center">
+          <span class="count">${groupDone}/${g.items.length}</span>
+          <span class="chevron">${ICON.chevD}</span>
+        </div>
+      </div>
+      <div class="collapse-body"><div class="checklist">${itemsHtml}</div></div>
+    </div>`;
+  }).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="more">${ICON.back}</button>
+        <div class="nav-title"><strong>Setup checklist</strong><small>mandatory · v2.4</small></div>
+        <button class="nav-action" data-action="setup-reset">${ICON.dots}</button>
+      </div>
+      <div class="alert-strip"><span>${ICON.warn}</span><div class="alert-text"><strong>Mandatory protocol.</strong> Use the standard syringe size regardless of dose for clear visual cue.</div></div>
+      <div class="progress-card">
+        <div class="progress-hdr"><h3>Completion</h3><span class="pct">${pct}%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      ${sections}
+      <div class="version-foot"><span>${done}/${total} items</span><span>state persists</span></div>
+    </div>`;
+  setActiveTab('more');
+}
+
+/* ========== BYPASS CHECKLIST ========== */
+function renderBypass(){
+  const done=BYPASS_ITEMS.filter((_,i)=>BYPASS_DONE['b-'+i]).length;
+  const pct=Math.round((done/BYPASS_ITEMS.length)*100);
+  const items=BYPASS_ITEMS.map((it,i)=>{
+    const k='b-'+i;
+    const isDone=BYPASS_DONE[k];
+    return `<div class="check-item ${isDone?'done':''}" data-bypass="${k}">
+      <div class="check-num">${(i+1).toString().padStart(2,'0')}</div>
+      <div class="check-text" style="font-weight:500">${it}</div>
+    </div>`;
+  }).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="home">${ICON.back}</button>
+        <div class="nav-title"><strong>Bypass init checklist</strong><small>R→L sweep · 10 items</small></div>
+        <button class="nav-action" data-action="bypass-reset">${ICON.dots}</button>
+      </div>
+      <div class="alert-strip crit"><span>${ICON.warn}</span><div class="alert-text"><strong>Do not hang or connect Protamine to patient.</strong> Mix Protamine and set aside in readiness.</div></div>
+      <div class="progress-card">
+        <div class="progress-hdr"><h3>Sweep complete</h3><span class="pct">${pct}%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="collapse open"><div class="collapse-body" style="padding:14px 15px"><div class="checklist">${items}</div></div></div>
+      <div class="version-foot"><span>${done}/${BYPASS_ITEMS.length} complete</span><span>state persists</span></div>
+    </div>`;
+  setActiveTab('cases');
+}
+
+/* ========== EMERGENCY ========== */
+function renderEmergency(){
+  const cards=EMERGENCIES.map(e=>{
+    const route=e.id==='bypass-init'?'bypass':'em/'+e.id;
+    return `<button class="em-card" data-route="${route}">
+      <div class="em-card-icon">${ICON[e.icon]||ICON.alert}</div>
+      <div class="em-card-title">${esc(e.title)}</div>
+      <div class="em-card-sub">${esc(e.sub)}</div>
+    </button>`;
+  }).join('');
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar"><button class="nav-back" data-route="home">${ICON.back}</button><div class="nav-title"><strong>Emergency reference</strong><small>tap to expand · always confirm</small></div></div>
+      <div class="em-hero">
+        <div class="em-hero-icon">${ICON.bolt}</div>
+        <div class="em-hero-title">Call attending now</div>
+        <div class="em-hero-sub">activate protocol · do not wait</div>
+      </div>
+      <div class="section-label"><span>Quick reference</span><span class="count">${EMERGENCIES.length} scenarios</span></div>
+      <div class="em-grid">${cards}</div>
+      <div class="callout warn" style="margin-top:8px">
+        <div class="callout-title">${ICON.alert}<span>Reminder</span></div>
+        <div class="callout-text">This reference does not replace ACLS or institutional protocols. Confirm doses with current pharmacy guidelines.</div>
+      </div>
+      <div class="version-foot"><span>v3.3 · prototype</span><span>—</span></div>
+    </div>`;
+  setActiveTab('home');
+}
+function renderEmergencyDetail(id){
+  const e=EMERGENCIES.find(x=>x.id===id);
+  if(!e){STATE.route='emergency';return renderEmergency()}
+  const content={
+    'chest-open':`<div class="callout crit"><div class="callout-title">${ICON.alert}<span>Emergency chest opening</span></div><div class="callout-text"><ul><li>Call ANES attending, ANES tech, surgical assistants</li><li>Notify perfusion — possibility of CPB</li><li>Open fluids</li><li>Robot retracted from surgical site (if applicable)</li><li>Release pt arms from armboards for supine</li><li>If no CVL, anticipate and prep for CVL</li><li>Blood products in the room</li></ul></div></div>`,
+    'protamine':`<div class="callout warn"><div class="callout-title">${ICON.alert}<span>Protamine reaction classification</span></div><div class="callout-text"><strong>Type I — hypotension:</strong> rate-related; pause infusion, fluid, vasopressor.<br><strong>Type II — anaphylactic / anaphylactoid:</strong> bronchospasm, urticaria, cardiovascular collapse. Stop protamine, epinephrine, fluid, steroids, H1/H2 blockers.<br><strong>Type III — pulmonary vasoconstriction:</strong> acute pulmonary HTN, RV failure. Stop protamine, supportive (inotropes for RV, iNO, methylene blue, return to CPB if needed).</div></div><div class="callout info"><div class="callout-title">${ICON.alert}<span>Reversal targets</span></div><div class="callout-text">Full reversal: <span class="mono">1 mg per 100 U heparin</span>. <strong>OPCAB:</strong> half calculated dose, increments if ACT &gt; 200. <strong>TAVR:</strong> surgeon-directed, ACT recheck <span class="mono">5–7 min</span>.</div></div>`,
+    'vt-vf':`<div class="callout crit"><div class="callout-title">${ICON.alert}<span>VT / VF</span></div><div class="callout-text"><strong>Witnessed pulseless VT/VF:</strong> immediate defibrillation. <strong>Pulse present, unstable:</strong> synchronized cardioversion. <strong>Pulse present, stable:</strong> consider amiodarone <span class="mono">150 mg over 10 min</span>, then <span class="mono">1 mg/min × 6 hr</span>, then <span class="mono">0.5 mg/min × 18 hr</span>. Lidocaine alternative <span class="mono">1–4 mg/min</span>. Treat reversible causes (Hs and Ts).</div></div>`,
+    'hemorrhage':`<div class="callout crit"><div class="callout-title">${ICON.alert}<span>Massive hemorrhage</span></div><div class="callout-text">Activate MTP. 1:1:1 ratio (PRBC : FFP : platelets). TEG/ROTEM guide. TXA <span class="mono">1 g</span> bolus. Calcium for citrate. <strong>Blood through warmer; platelets NOT.</strong> Recheck H&H, ABG, fibrinogen, lactate q15–30 min.</div></div>`,
+    'tamponade':`<div class="callout warn"><div class="callout-title">${ICON.alert}<span>Tamponade</span></div><div class="callout-text">Beck's triad (hypotension, JVD, muffled heart sounds). Confirm with TEE — RA/RV diastolic collapse, IVC plethora. Maintain preload, HR, contractility. Avoid vasodilation. Prep for emergent re-exploration.</div></div>`,
+  }[id]||'<div class="empty">Detail coming soon</div>';
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="emergency">${ICON.back}</button>
+        <div class="nav-title"><strong>${esc(e.title)}</strong><small>${esc(e.sub)}</small></div>
+      </div>
+      ${content}
+      <div class="callout warn">
+        <div class="callout-title">${ICON.alert}<span>Reminder</span></div>
+        <div class="callout-text">This reference does not replace ACLS / institutional protocols. Confirm doses with current pharmacy guidelines and call for help.</div>
+      </div>
+      <div class="version-foot"><span>v3.3 · prototype</span><span>—</span></div>
+    </div>`;
+  setActiveTab('home');
+}
+
+/* ========== SRNA ========== */
+function renderSRNA(){
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="more">${ICON.back}</button>
+        <div class="nav-title"><strong>SRNA info</strong><small>students · contacts · reminders</small></div>
+      </div>
+      <div class="collapse open">
+        <div class="collapse-hdr"><div class="left"><span class="lead">${ICON.book}</span><span>Student rotation</span></div></div>
+        <div class="collapse-body">
+          <div class="checklist">
+            <div class="check-item"><div class="check-num">·</div><div class="check-text">Senior students start rotation after completion of CV lectures</div></div>
+            <div class="check-item"><div class="check-num">·</div><div class="check-text">Setup & CVL lecture · practical simulations</div></div>
+            <div class="check-item"><div class="check-num">·</div><div class="check-text">CV lecture</div></div>
+            <div class="check-item"><div class="check-num">·</div><div class="check-text">Assigned day before to specific room</div></div>
+            <div class="check-item"><div class="check-num">·</div><div class="check-text">Student responsible for checking OR board for AM location; verify if case moved</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout warn">
+        <div class="callout-title">${ICON.warn}<span>Mandatory</span></div>
+        <div class="callout-text">Students must observe OSHA precautions (safety glasses, gloves). Students may NOT change room or case assignment unless cleared by attending MD or CRNA.</div>
+      </div>
+      <div class="section-label" style="margin-top:8px"><span>Contacts</span></div>
+      <div class="collapse open">
+        <div class="collapse-body" style="padding:14px 15px">
+          <div style="margin-bottom:14px">
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px">Dr. Jasmine Swaniker</div>
+            <a href="mailto:Jasmine.Swaniker@usap.com" style="font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px"><span>${ICON.mail}</span>Jasmine.Swaniker@usap.com</a>
+          </div>
+          <div style="margin-bottom:14px;padding-top:14px;border-top:0.5px solid var(--border)">
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px">Hana Kleinova</div>
+            <a href="mailto:Hana.Kleinova@usap.com" style="font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px"><span>${ICON.mail}</span>Hana.Kleinova@usap.com</a>
+            <a href="tel:813-326-4285" style="font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px;margin-top:4px"><span>${ICON.phone}</span>813-326-4285</a>
+          </div>
+          <div style="padding-top:14px;border-top:0.5px solid var(--border)">
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px">Reporting student errors</div>
+            <div style="font-size:11.5px;color:var(--text-3);margin-bottom:6px">Send specific, detailed description of issue to:</div>
+            <a href="mailto:Alescia.devasher@adu.edu" style="font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px"><span>${ICON.mail}</span>Alescia.devasher@adu.edu</a>
+          </div>
+        </div>
+      </div>
+      <div class="section-label" style="margin-top:8px"><span>Critical reminders</span></div>
+      <div class="callout warn"><div class="callout-title">${ICON.alert}<span>Be vigilant</span></div><div class="callout-text">This is the trickiest part of the procedure. <strong>Clear communications required.</strong></div></div>
+      <div class="callout info"><div class="callout-title">${ICON.alert}<span>Blood transfusion</span></div><div class="callout-text">Blood can be transfused through warmer. <strong>Platelets are NOT.</strong></div></div>
+      <div class="callout ok"><div class="callout-title">${ICON.alert}<span>Transport mandate</span></div><div class="callout-text">ALL patients travel to CVICU with pacemaker — no exceptions.</div></div>
+      <div class="version-foot"><span>v3.3</span><span>—</span></div>
+    </div>`;
+  setActiveTab('more');
+}
+
+/* ========== MORE TAB ========== */
+function renderMore(){
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar" style="background:var(--bg);backdrop-filter:none"><div class="nav-title" style="margin-left:6px"><strong>More</strong><small>tools · references · about</small></div></div>
+      <div class="section-label"><span>Checklists</span></div>
+      <div class="grid">
+        <button class="card c-setup" data-route="setup"><div class="card-icon">${ICON.flask}</div><div><div class="card-title">Setup</div><div class="card-meta">Mandatory · ${SETUP_ITEMS.syringes.length+SETUP_ITEMS.ivbags.length+SETUP_ITEMS.airway.length+SETUP_ITEMS.misc.length+SETUP_ITEMS.lowef.length} items</div></div></button>
+        <button class="card c-bypass" data-route="bypass"><div class="card-icon">${ICON.list}</div><div><div class="card-title">Bypass init</div><div class="card-meta">10-item sweep</div></div></button>
+      </div>
+      <div class="section-label" style="margin-top:6px"><span>Workflow</span></div>
+      <div class="grid">
+        <button class="card c-procedures" data-route="procedures" style="grid-column:span 2;min-height:auto;flex-direction:row;align-items:center;gap:14px">
+          <div class="card-icon">${ICON.list}</div>
+          <div style="flex:1"><div class="card-title" style="margin:0">10-step procedure workflow</div><div class="card-meta">pre-op board → charting</div></div>
+          <span style="color:var(--text-3)">${ICON.chevR}</span>
+        </button>
+      </div>
+      <div class="section-label" style="margin-top:6px"><span>Information</span></div>
+      <div class="grid">
+        <button class="card c-srna" data-route="srna"><div class="card-icon">${ICON.book}</div><div><div class="card-title">SRNA info</div><div class="card-meta">Students · contacts</div></div></button>
+        <button class="card c-account" data-route="about"><div class="card-icon">${ICON.cog}</div><div><div class="card-title">About</div><div class="card-meta">Version · disclaimer</div></div></button>
+      </div>
+      <div class="section-label" style="margin-top:6px"><span>Saved</span><span class="count">${SAVED.length} items</span></div>
+      <div style="padding:0 22px 14px">
+        ${SAVED.length?SAVED.slice(0,8).map(k=>{
+          const [type,id]=k.split(':');
+          let label='',route=k;
+          if(type==='drug'){const d=DRUGS.find(x=>x.name.toLowerCase().replace(/\W+/g,'-')===id);label=d?d.name:id;route='drug/'+id}
+          else if(type==='surgeon'){const s=SURGEONS.find(x=>x.name.toLowerCase()===id);label=s?'Dr. '+s.name:id;route='surgeon/'+id}
+          else if(type==='protocol'){const p=PROTOCOLS[id];label=p?p.title:id;route='protocol/'+id}
+          return `<button class="alpha-item" style="border-top:0.5px solid var(--border);width:100%" data-route="${route}">
+            <div class="alpha-tag" style="background:var(--warn)"></div>
+            <div class="alpha-body"><div class="alpha-name">${esc(label)}</div><div class="alpha-sub">${type}</div></div>
+            <span class="alpha-chev">${ICON.chevR}</span>
+          </button>`;
+        }).join(''):`<div class="recent-empty">Tap the bookmark icon in any drug, surgeon, or protocol to save it here</div>`}
+      </div>
+      <div class="version-foot"><span>v3.3 prototype</span><span>© H. Kleinova</span></div>
+    </div>`;
+  setActiveTab('more');
+}
+
+/* ========== ABOUT ========== */
+function renderAbout(){
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="navbar">
+        <button class="nav-back" data-route="more">${ICON.back}</button>
+        <div class="nav-title"><strong>About</strong><small>version · disclaimer</small></div>
+      </div>
+      <div class="surgeon-hero">
+        <div class="surgeon-avatar">HK</div>
+        <div>
+          <h1>Hana Kleinova</h1>
+          <div class="role">DNP · CRNA · APRN · CRNA Lead</div>
+        </div>
+      </div>
+      <div class="callout info">
+        <div class="callout-title">${ICON.alert}<span>From the Lead</span></div>
+        <div class="callout-text">"You are about to embark on one of the most challenging but rewarding assignments in our profession. It's not for everyone but if you master this discipline, you will be operating at the very pinnacle of our profession. The nature of what we do means we are unforgiving of mistakes. Study this guide carefully. Ask questions. Do not make the same mistake twice."</div>
+      </div>
+      <div class="callout ok">
+        <div class="callout-title">${ICON.star}<span>Pharmacy & supplies</span></div>
+        <div class="callout-text"><strong>Narcotics:</strong> individual OR CV Pyxis · <strong>1st floor pharmacy:</strong> 0630–1500 · <strong>Main hospital pharmacy:</strong> after 1500 · All orders via EPIC · Controlled substances returned to small vault, bottom right of OR Pyxis</div>
+      </div>
+      <div class="section-label" style="margin-top:8px"><span>This build</span></div>
+      <div class="spec-table">
+        <div class="spec-row"><div class="key">Version</div><div class="val"><span class="mono">3.3 prototype</span></div></div>
+        <div class="spec-row"><div class="key">Built</div><div class="val"><span class="mono">22 May 2026</span></div></div>
+        <div class="spec-row"><div class="key">Source</div><div class="val">Single-file static HTML</div></div>
+        <div class="spec-row"><div class="key">Storage</div><div class="val">localStorage (recents, saved, checklists)</div></div>
+        <div class="spec-row"><div class="key">Offline</div><div class="val">Works after first load on this device</div></div>
+        <div class="spec-row"><div class="key">Drugs</div><div class="val"><span class="mono">${DRUGS.length}</span> medications</div></div>
+        <div class="spec-row"><div class="key">Surgeons</div><div class="val"><span class="mono">${SURGEONS.length}</span> surgeons</div></div>
+        <div class="spec-row"><div class="key">Protocols</div><div class="val"><span class="mono">${PROTOCOL_ORDER.length}</span> cases</div></div>
+        <div class="spec-row"><div class="key">Procedures</div><div class="val"><span class="mono">${PROCEDURE_STEPS.length}</span> workflow steps</div></div>
+      </div>
+      <div class="callout warn" style="margin-top:14px">
+        <div class="callout-title">${ICON.warn}<span>Clinical use</span></div>
+        <div class="callout-text">Educational reference. Confirm all doses, devices, and surgical specifics with current institutional protocols and pharmacy guidelines before clinical use.</div>
+      </div>
+      <div style="text-align:center;padding:22px 22px 8px;color:var(--text-4);font-size:11px;font-family:var(--mono);line-height:1.7">© 2016–2026 Hana Kleinova DNP CRNA APRN<br>All rights reserved</div>
+    </div>`;
+  setActiveTab('more');
+}
+
+/* ========== SEARCH ========== */
+function renderSearch(){
+  const q=(STATE.query||'').trim().toLowerCase();
+  let body='';
+  if(q.length<2){body=`<div class="empty">${ICON.search}<div style="margin-top:8px">Type a drug, surgeon, protocol, or step</div></div>`}
+  else {
+    const hits=[];
+    const hl=t=>String(t).replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');
+    DRUGS.forEach(d=>{
+      const blob=(d.name+' '+d.generic+' '+d.conc+' '+d.doses.map(r=>r.join(' ')).join(' ')).toLowerCase();
+      if(blob.includes(q)){const id=d.name.toLowerCase().replace(/\W+/g,'-');hits.push({where:'DRUG',title:d.name,snippet:d.generic+' · '+d.conc,route:'drug/'+id})}
+    });
+    SURGEONS.forEach(s=>{
+      const blob=(s.name+' '+s.drips+' '+s.misc+' '+s.comms+' '+s.position+' '+s.dislikes).toLowerCase();
+      if(blob.includes(q))hits.push({where:'SURGEON',title:'Dr. '+s.name,snippet:s.drips+' · MAP '+s.map,route:'surgeon/'+s.name.toLowerCase()});
+    });
+    PROTOCOL_ORDER.forEach(id=>{
+      const p=PROTOCOLS[id];
+      let snippet='';
+      const visit=(b)=>{
+        if(!b)return;
+        if(b.title&&b.title.toLowerCase().includes(q))snippet=snippet||b.title;
+        if(b.text&&b.text.toLowerCase().replace(/<[^>]+>/g,'').includes(q))snippet=snippet||b.text.replace(/<[^>]+>/g,'');
+        (b.items||[]).forEach(it=>{if(it.text&&it.text.toLowerCase().replace(/<[^>]+>/g,'').includes(q))snippet=snippet||it.text.replace(/<[^>]+>/g,'')});
+        (b.drugs||[]).forEach(d=>{if((d.name+' '+d.sub+' '+d.dose).toLowerCase().includes(q))snippet=snippet||(d.name+' — '+d.sub)});
+        (b.rows||[]).forEach(r=>{if(r.join(' ').toLowerCase().replace(/<[^>]+>/g,'').includes(q))snippet=snippet||(r[0]+': '+String(r[1]).replace(/<[^>]+>/g,''))});
+      };
+      Object.values(p.phases).forEach(arr=>arr.forEach(visit));
+      const titleHit=(p.title+' '+p.full).toLowerCase().includes(q);
+      if(titleHit||snippet)hits.push({where:'PROTOCOL',title:p.full||p.title,snippet:snippet||p.cardSub,route:'protocol/'+id});
+    });
+    PROCEDURE_STEPS.forEach(s=>{
+      const blob=(s.title+' '+s.sub+' '+JSON.stringify(s.content)).toLowerCase().replace(/<[^>]+>/g,'');
+      if(blob.includes(q))hits.push({where:'PROCEDURE',title:'Step '+s.n+' · '+s.title,snippet:s.sub,route:'procedure/'+s.n});
+    });
+    const seen=new Set();
+    const dedup=hits.filter(h=>{const k=h.where+h.route;if(seen.has(k))return false;seen.add(k);return true}).slice(0,30);
+    body=dedup.length?`<div class="results">${dedup.map(h=>`<div class="result" data-route="${h.route}">
+      <div class="result-where">${h.where}</div>
+      <div class="result-title">${hl(esc(h.title))}</div>
+      <div class="result-snippet">${hl(esc(h.snippet))}</div>
+    </div>`).join('')}</div>`:`<div class="empty">${ICON.search}<div style="margin-top:8px">No matches for "${esc(q)}"</div></div>`;
+  }
+  root.innerHTML=`
+    <div class="fade-in">
+      <div class="list-search">
+        <div class="list-input ${STATE.query?'has-value':''}">${ICON.search}
+          <input id="search-input" type="search" placeholder="Drug, surgeon, dose, protocol…" autocomplete="off" autocapitalize="none" autocorrect="off" value="${esc(STATE.query)}">
+          <span class="clear" data-action="clear">${ICON.x}</span>
+        </div>
+      </div>
+      ${body}
+    </div>`;
+  setActiveTab(null);
+  const inp=document.getElementById('search-input');
+  if(inp){inp.focus();inp.addEventListener('input',e=>{STATE.query=e.target.value;renderSearch()})}
+}
+
+/* ========== ROUTER ========== */
+function route(path){
+  STATE.route=path;
+  if(document.querySelector('main'))document.querySelector('main').scrollTop=0;
+  if(path==='home')return renderHome();
+  if(path==='search')return renderSearch();
+  if(path==='drugs'){STATE.query='';return renderDrugList()}
+  if(path==='surgeons'){STATE.query='';return renderSurgeonList()}
+  if(path==='cases')return renderCasesList();
+  if(path==='more')return renderMore();
+  if(path==='setup')return renderSetup();
+  if(path==='bypass')return renderBypass();
+  if(path==='procedures')return renderProcedureList();
+  if(path==='emergency')return renderEmergency();
+  if(path==='srna')return renderSRNA();
+  if(path==='about')return renderAbout();
+  if(path.startsWith('drug/'))return renderDrugDetail(path.slice(5));
+  if(path.startsWith('surgeon/'))return renderSurgeonDetail(path.slice(8));
+  if(path.startsWith('protocol/')){STATE.phase='preop';return renderProtocol(path.slice(9))}
+  if(path.startsWith('procedure/'))return renderProcedureDetail(path.slice(10));
+  if(path.startsWith('em/'))return renderEmergencyDetail(path.slice(3));
+  return renderHome();
+}
+function go(path){window.location.hash=path}
+
+/* ========== EVENT DELEGATION ========== */
+document.addEventListener('click',e=>{
+  const rt=e.target.closest('[data-route]');
+  if(rt){e.preventDefault();go(rt.dataset.route);return}
+  const phaseBtn=e.target.closest('[data-phase]');
+  if(phaseBtn){STATE.phase=phaseBtn.dataset.phase;renderProtocol(STATE.route.slice(9));return}
+  const toggle=e.target.closest('[data-toggle]');
+  if(toggle){const c=toggle.closest('[data-collapse]');if(c)c.classList.toggle('open');return}
+  const check=e.target.closest('[data-check]');
+  if(check){toggleCheck(check.dataset.check);check.classList.toggle('done');return}
+  const setupEl=e.target.closest('[data-setup]');
+  if(setupEl){toggleSetup(setupEl.dataset.setup);renderSetup();return}
+  const bypassEl=e.target.closest('[data-bypass]');
+  if(bypassEl){toggleBypass(bypassEl.dataset.bypass);renderBypass();return}
+  const bm=e.target.closest('[data-action="bookmark"]');
+  if(bm){toggleSaved(bm.dataset.type,bm.dataset.id);bm.classList.toggle('on');return}
+  const clr=e.target.closest('[data-action="clear"]');
+  if(clr){STATE.query='';route(STATE.route);return}
+  const sr=e.target.closest('[data-action="setup-reset"]');
+  if(sr){if(confirm('Reset all setup checklist items?')){SETUP_DONE={};save(KEY.setup,SETUP_DONE);renderSetup()}return}
+  const br=e.target.closest('[data-action="bypass-reset"]');
+  if(br){if(confirm('Reset bypass init checklist?')){BYPASS_DONE={};save(KEY.bypass,BYPASS_DONE);renderBypass()}return}
+});
+
+window.addEventListener('hashchange',()=>{route(window.location.hash.slice(1)||'home')});
+
+/* ========== INIT ========== */
+route(window.location.hash.slice(1)||'home');
+
+/* prevent iOS double-tap zoom */
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouch<=300)e.preventDefault();lastTouch=n},{passive:false});
+</script>
+</body>
+</html>
